@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x760e398582536413a84d9ada600e117c071a70b38087d6ca4ba5ac67cce930e"
+original_class_hash = "0x760e398582536413a84d9ada600e117c071a70b38087d6ca4ba5ac67cce930e"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_spaceship_spaceship.json"
+name = "dojo_starter::models::spaceship::spaceship"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "pos_x"
+type = "u32"
+key = false
+
+[[members]]
+name = "pos_y"
+type = "u32"
+key = false

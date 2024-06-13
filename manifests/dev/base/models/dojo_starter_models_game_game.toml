@@ -1,0 +1,45 @@
+kind = "DojoModel"
+class_hash = "0x59f59add85c2ecafc81049fecf99ce3c505bcc0f1753570a9d08de701072b92"
+original_class_hash = "0x59f59add85c2ecafc81049fecf99ce3c505bcc0f1753570a9d08de701072b92"
+abi = "manifests/dev/abis/base/models/dojo_starter_models_game_game.json"
+name = "dojo_starter::models::game::game"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "spaceship_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "board_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "score"
+type = "u32"
+key = false
+
+[[members]]
+name = "round"
+type = "u32"
+key = false
+
+[[members]]
+name = "player_name"
+type = "felt252"
+key = false
+
+[[members]]
+name = "owner"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "state"
+type = "bool"
+key = false
