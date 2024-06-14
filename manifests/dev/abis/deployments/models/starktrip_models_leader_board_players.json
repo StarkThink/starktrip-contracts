@@ -170,11 +170,11 @@
   {
     "type": "impl",
     "name": "playersImpl",
-    "interface_name": "dojo_starter::models::leader_board::Iplayers"
+    "interface_name": "starktrip::models::leader_board::Iplayers"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::leader_board::Players",
+    "name": "starktrip::models::leader_board::Players",
     "members": [
       {
         "name": "player",
@@ -188,7 +188,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::leader_board::Iplayers",
+    "name": "starktrip::models::leader_board::Iplayers",
     "items": [
       {
         "type": "function",
@@ -196,7 +196,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::leader_board::Players"
+            "type": "starktrip::models::leader_board::Players"
           }
         ],
         "outputs": [],
@@ -206,7 +206,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::leader_board::players::Event",
+    "name": "starktrip::models::leader_board::players::Event",
     "kind": "enum",
     "variants": []
   }

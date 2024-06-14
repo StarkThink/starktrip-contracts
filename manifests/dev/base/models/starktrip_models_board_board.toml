@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
+original_class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
+abi = "manifests/dev/abis/base/models/starktrip_models_board_board.json"
+name = "starktrip::models::board::board"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = false
+
+[[members]]
+name = "rows"
+type = "u8"
+key = false
+
+[[members]]
+name = "max_movements"
+type = "u8"
+key = false

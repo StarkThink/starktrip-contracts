@@ -169,26 +169,40 @@
   },
   {
     "type": "impl",
-    "name": "playersImpl",
-    "interface_name": "dojo_starter::models::leader_board::Iplayers"
+    "name": "positionImpl",
+    "interface_name": "starktrip::models::position::Iposition"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::leader_board::Players",
+    "name": "starktrip::models::position::Vec2",
+    "members": [
+      {
+        "name": "x",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "y",
+        "type": "core::integer::u32"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "starktrip::models::position::Position",
     "members": [
       {
         "name": "player",
         "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "score",
-        "type": "core::integer::u32"
+        "name": "vec",
+        "type": "starktrip::models::position::Vec2"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::leader_board::Iplayers",
+    "name": "starktrip::models::position::Iposition",
     "items": [
       {
         "type": "function",
@@ -196,7 +210,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::leader_board::Players"
+            "type": "starktrip::models::position::Position"
           }
         ],
         "outputs": [],
@@ -206,7 +220,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::leader_board::players::Event",
+    "name": "starktrip::models::position::position::Event",
     "kind": "enum",
     "variants": []
   }

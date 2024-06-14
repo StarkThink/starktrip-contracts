@@ -169,34 +169,26 @@
   },
   {
     "type": "impl",
-    "name": "boardImpl",
-    "interface_name": "dojo_starter::models::board::Iboard"
+    "name": "playersImpl",
+    "interface_name": "starktrip::models::leader_board::Iplayers"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::board::Board",
+    "name": "starktrip::models::leader_board::Players",
     "members": [
       {
-        "name": "id",
+        "name": "player",
+        "type": "core::starknet::contract_address::ContractAddress"
+      },
+      {
+        "name": "score",
         "type": "core::integer::u32"
-      },
-      {
-        "name": "game_id",
-        "type": "core::integer::u32"
-      },
-      {
-        "name": "rows",
-        "type": "core::integer::u8"
-      },
-      {
-        "name": "max_movements",
-        "type": "core::integer::u8"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::board::Iboard",
+    "name": "starktrip::models::leader_board::Iplayers",
     "items": [
       {
         "type": "function",
@@ -204,7 +196,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::board::Board"
+            "type": "starktrip::models::leader_board::Players"
           }
         ],
         "outputs": [],
@@ -214,7 +206,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::board::board::Event",
+    "name": "starktrip::models::leader_board::players::Event",
     "kind": "enum",
     "variants": []
   }

@@ -1,0 +1,9 @@
+kind = "DojoContract"
+class_hash = "0x1e7ddcd0bb02ce6423456215b71730c3524502d4067674f50233651d57559c0"
+original_class_hash = "0x1e7ddcd0bb02ce6423456215b71730c3524502d4067674f50233651d57559c0"
+base_class_hash = "0x0"
+abi = "manifests/dev/abis/base/contracts/starktrip_systems_game_game.json"
+reads = []
+writes = []
+computed = []
+name = "starktrip::systems::game::game"

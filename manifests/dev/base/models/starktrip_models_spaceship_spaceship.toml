@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x57a844dab279e690f4ae36fbeb1b6a4fc222bf569793aa78dcd02ac6f237af9"
+original_class_hash = "0x57a844dab279e690f4ae36fbeb1b6a4fc222bf569793aa78dcd02ac6f237af9"
+abi = "manifests/dev/abis/base/models/starktrip_models_spaceship_spaceship.json"
+name = "starktrip::models::spaceship::spaceship"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "pos_x"
+type = "u32"
+key = false
+
+[[members]]
+name = "pos_y"
+type = "u32"
+key = false

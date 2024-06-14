@@ -169,12 +169,12 @@
   },
   {
     "type": "impl",
-    "name": "boardImpl",
-    "interface_name": "dojo_starter::models::board::Iboard"
+    "name": "spaceshipImpl",
+    "interface_name": "starktrip::models::spaceship::Ispaceship"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::board::Board",
+    "name": "starktrip::models::spaceship::Spaceship",
     "members": [
       {
         "name": "id",
@@ -185,18 +185,18 @@
         "type": "core::integer::u32"
       },
       {
-        "name": "rows",
-        "type": "core::integer::u8"
+        "name": "pos_x",
+        "type": "core::integer::u32"
       },
       {
-        "name": "max_movements",
-        "type": "core::integer::u8"
+        "name": "pos_y",
+        "type": "core::integer::u32"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::board::Iboard",
+    "name": "starktrip::models::spaceship::Ispaceship",
     "items": [
       {
         "type": "function",
@@ -204,7 +204,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::board::Board"
+            "type": "starktrip::models::spaceship::Spaceship"
           }
         ],
         "outputs": [],
@@ -214,7 +214,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::board::board::Event",
+    "name": "starktrip::models::spaceship::spaceship::Event",
     "kind": "enum",
     "variants": []
   }

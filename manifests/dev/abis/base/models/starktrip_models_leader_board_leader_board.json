@@ -169,34 +169,40 @@
   },
   {
     "type": "impl",
-    "name": "spaceshipImpl",
-    "interface_name": "dojo_starter::models::spaceship::Ispaceship"
+    "name": "leader_boardImpl",
+    "interface_name": "starktrip::models::leader_board::Ileader_board"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::spaceship::Spaceship",
+    "name": "starktrip::models::leader_board::Players",
     "members": [
       {
-        "name": "id",
-        "type": "core::integer::u32"
+        "name": "player",
+        "type": "core::starknet::contract_address::ContractAddress"
       },
       {
-        "name": "game_id",
+        "name": "score",
         "type": "core::integer::u32"
+      }
+    ]
+  },
+  {
+    "type": "struct",
+    "name": "starktrip::models::leader_board::LeaderBoard",
+    "members": [
+      {
+        "name": "players",
+        "type": "starktrip::models::leader_board::Players"
       },
       {
-        "name": "pos_x",
-        "type": "core::integer::u32"
-      },
-      {
-        "name": "pos_y",
+        "name": "score",
         "type": "core::integer::u32"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::spaceship::Ispaceship",
+    "name": "starktrip::models::leader_board::Ileader_board",
     "items": [
       {
         "type": "function",
@@ -204,7 +210,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::spaceship::Spaceship"
+            "type": "starktrip::models::leader_board::LeaderBoard"
           }
         ],
         "outputs": [],
@@ -214,7 +220,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::spaceship::spaceship::Event",
+    "name": "starktrip::models::leader_board::leader_board::Event",
     "kind": "enum",
     "variants": []
   }

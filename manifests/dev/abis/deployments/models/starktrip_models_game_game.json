@@ -170,7 +170,7 @@
   {
     "type": "impl",
     "name": "gameImpl",
-    "interface_name": "dojo_starter::models::game::Igame"
+    "interface_name": "starktrip::models::game::Igame"
   },
   {
     "type": "enum",
@@ -188,7 +188,7 @@
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::game::Game",
+    "name": "starktrip::models::game::Game",
     "members": [
       {
         "name": "id",
@@ -226,7 +226,7 @@
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::game::Igame",
+    "name": "starktrip::models::game::Igame",
     "items": [
       {
         "type": "function",
@@ -234,7 +234,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::game::Game"
+            "type": "starktrip::models::game::Game"
           }
         ],
         "outputs": [],
@@ -244,7 +244,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::game::game::Event",
+    "name": "starktrip::models::game::game::Event",
     "kind": "enum",
     "variants": []
   }
