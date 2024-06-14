@@ -1,13 +1,11 @@
 mod events;
+mod store;
 
 mod systems {
-    mod actions;
     mod game;
 }
 
 mod models {
-    mod moves;
-    mod position;
     mod spaceship;
     mod game;
     mod board;
@@ -15,5 +13,5 @@ mod models {
 }
 
 mod tests {
-    mod test_world;
+    
 }

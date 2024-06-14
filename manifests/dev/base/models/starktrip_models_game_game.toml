@@ -1,8 +1,8 @@
 kind = "DojoModel"
-class_hash = "0x59f59add85c2ecafc81049fecf99ce3c505bcc0f1753570a9d08de701072b92"
-original_class_hash = "0x59f59add85c2ecafc81049fecf99ce3c505bcc0f1753570a9d08de701072b92"
-abi = "manifests/dev/abis/base/models/dojo_starter_models_game_game.json"
-name = "dojo_starter::models::game::game"
+class_hash = "0x2671aaa6f4eb41826c37c98962306dc8899606e00087f50f9f07895b9370935"
+original_class_hash = "0x2671aaa6f4eb41826c37c98962306dc8899606e00087f50f9f07895b9370935"
+abi = "manifests/dev/abis/base/models/starktrip_models_game_game.json"
+name = "starktrip::models::game::game"
 
 [[members]]
 name = "id"

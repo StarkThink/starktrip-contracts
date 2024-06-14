@@ -169,64 +169,34 @@
   },
   {
     "type": "impl",
-    "name": "gameImpl",
-    "interface_name": "dojo_starter::models::game::Igame"
-  },
-  {
-    "type": "enum",
-    "name": "core::bool",
-    "variants": [
-      {
-        "name": "False",
-        "type": "()"
-      },
-      {
-        "name": "True",
-        "type": "()"
-      }
-    ]
+    "name": "spaceshipImpl",
+    "interface_name": "starktrip::models::spaceship::Ispaceship"
   },
   {
     "type": "struct",
-    "name": "dojo_starter::models::game::Game",
+    "name": "starktrip::models::spaceship::Spaceship",
     "members": [
       {
         "name": "id",
         "type": "core::integer::u32"
       },
       {
-        "name": "spaceship_id",
+        "name": "game_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "board_id",
+        "name": "pos_x",
         "type": "core::integer::u32"
       },
       {
-        "name": "score",
+        "name": "pos_y",
         "type": "core::integer::u32"
-      },
-      {
-        "name": "round",
-        "type": "core::integer::u32"
-      },
-      {
-        "name": "player_name",
-        "type": "core::felt252"
-      },
-      {
-        "name": "owner",
-        "type": "core::starknet::contract_address::ContractAddress"
-      },
-      {
-        "name": "state",
-        "type": "core::bool"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "dojo_starter::models::game::Igame",
+    "name": "starktrip::models::spaceship::Ispaceship",
     "items": [
       {
         "type": "function",
@@ -234,7 +204,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "dojo_starter::models::game::Game"
+            "type": "starktrip::models::spaceship::Spaceship"
           }
         ],
         "outputs": [],
@@ -244,7 +214,7 @@
   },
   {
     "type": "event",
-    "name": "dojo_starter::models::game::game::Event",
+    "name": "starktrip::models::spaceship::spaceship::Event",
     "kind": "enum",
     "variants": []
   }
