@@ -136,45 +136,6 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x2062e08191d4eb4c317815ca793683b5579aec077a8d3fccbef54c7677c9516"
-original_class_hash = "0x2062e08191d4eb4c317815ca793683b5579aec077a8d3fccbef54c7677c9516"
-abi = "abis/deployments/models/starktrip_models_moves_moves.json"
-name = "starktrip::models::moves::moves"
-
-[[models.members]]
-name = "player"
-type = "ContractAddress"
-key = true
-
-[[models.members]]
-name = "remaining"
-type = "u8"
-key = false
-
-[[models.members]]
-name = "last_direction"
-type = "Direction"
-key = false
-
-[[models]]
-kind = "DojoModel"
-class_hash = "0x997f8fc9caf7f4c4ed44a1d494c8dc0c25eec0cf043b673338d904e6219338"
-original_class_hash = "0x997f8fc9caf7f4c4ed44a1d494c8dc0c25eec0cf043b673338d904e6219338"
-abi = "abis/deployments/models/starktrip_models_position_position.json"
-name = "starktrip::models::position::position"
-
-[[models.members]]
-name = "player"
-type = "ContractAddress"
-key = true
-
-[[models.members]]
-name = "vec"
-type = "Vec2"
-key = false
-
-[[models]]
-kind = "DojoModel"
 class_hash = "0x57a844dab279e690f4ae36fbeb1b6a4fc222bf569793aa78dcd02ac6f237af9"
 original_class_hash = "0x57a844dab279e690f4ae36fbeb1b6a4fc222bf569793aa78dcd02ac6f237af9"
 abi = "abis/deployments/models/starktrip_models_spaceship_spaceship.json"
