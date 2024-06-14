@@ -2,7 +2,6 @@
 struct Board {
     #[key]
     id: u32,
-    #[key]
     game_id: u32,
     rows: u8,
     max_movements: u8
