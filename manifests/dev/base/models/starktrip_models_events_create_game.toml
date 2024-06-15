@@ -1,0 +1,15 @@
+kind = "DojoModel"
+class_hash = "0xeb4dedd858e532863d0c24375e5394c9639d9e5908d61fb0da25682e46d60a"
+original_class_hash = "0xeb4dedd858e532863d0c24375e5394c9639d9e5908d61fb0da25682e46d60a"
+abi = "manifests/dev/abis/base/models/starktrip_models_events_create_game.json"
+name = "starktrip::models::events::create_game"
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "player_address"
+type = "ContractAddress"
+key = false

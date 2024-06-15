@@ -16,14 +16,6 @@ mod game_system {
     use starktrip::store::{Store, StoreTrait};
     use starknet::get_caller_address;
 
-    #[event]
-    #[derive(Drop, starknet::Event)]
-    enum Event {
-        GameOver: GameOver,
-        GameWin: GameWin,
-        CreateGame: CreateGame
-    }
-
     #[abi(embed_v0)]
     impl GameImpl of IGameSystem<ContractState> {
         fn create_game(world: IWorldDispatcher, player_name: felt252) -> felt252 {

@@ -1,0 +1,25 @@
+kind = "DojoModel"
+class_hash = "0x2111fb98844587e0fe1918d6ffede47ad484062fb43443b50111a4dc4972cce"
+original_class_hash = "0x2111fb98844587e0fe1918d6ffede47ad484062fb43443b50111a4dc4972cce"
+abi = "manifests/dev/abis/base/models/starktrip_models_events_game_win.json"
+name = "starktrip::models::events::game_win"
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "player_address"
+type = "ContractAddress"
+key = true
+
+[[members]]
+name = "round"
+type = "u32"
+key = false
+
+[[members]]
+name = "score"
+type = "u32"
+key = false

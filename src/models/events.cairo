@@ -29,7 +29,7 @@ struct GameOver {
 
 #[derive(Model, Copy, Drop, Serde)]
 #[dojo::event]
-struct Game {
+struct GameEvent {
     #[key]
     id: u32,
     #[key]
