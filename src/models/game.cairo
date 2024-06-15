@@ -4,9 +4,7 @@ use starknet::ContractAddress;
 struct Game {
     #[key]
     id: u32,
-    #[key]
     spaceship_id: u32,
-    #[key]
     board_id: u32,
     score: u32,
     round: u32,

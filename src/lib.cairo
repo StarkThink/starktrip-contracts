@@ -12,6 +12,4 @@ mod models {
     mod leader_board;
 }
 
-mod tests {
-    
-}
+mod tests {}
