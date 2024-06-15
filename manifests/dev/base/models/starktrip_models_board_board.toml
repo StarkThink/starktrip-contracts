@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
-original_class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
+class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
+original_class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
 abi = "manifests/dev/abis/base/models/starktrip_models_board_board.json"
 name = "starktrip::models::board::board"
 
@@ -21,5 +21,10 @@ key = false
 
 [[members]]
 name = "max_movements"
+type = "u16"
+key = false
+
+[[members]]
+name = "animals_to_deliver"
 type = "u8"
 key = false

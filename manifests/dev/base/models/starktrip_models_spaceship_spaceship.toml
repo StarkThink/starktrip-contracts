@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x17920d146846f548c1b94cab55e3196f954ac637211befa4e142122146bda57"
-original_class_hash = "0x17920d146846f548c1b94cab55e3196f954ac637211befa4e142122146bda57"
+class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
+original_class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
 abi = "manifests/dev/abis/base/models/starktrip_models_spaceship_spaceship.json"
 name = "starktrip::models::spaceship::spaceship"
 
@@ -16,7 +16,7 @@ key = false
 
 [[members]]
 name = "node_id"
-type = "felt252"
+type = "u32"
 key = false
 
 [[members]]

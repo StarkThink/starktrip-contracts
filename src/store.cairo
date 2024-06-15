@@ -19,7 +19,7 @@ impl StoreImpl of StoreTrait {
         Store { world: world }
     }
 
-    fn get_game(ref self: Store, id: u32, spaceship_id: u32, board_id: u32) -> Game {
+    fn get_game(ref self: Store, id: u32) -> Game {
         get!(self.world, (id), (Game))
     }
 
