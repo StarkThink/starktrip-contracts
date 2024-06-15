@@ -1,6 +1,6 @@
 kind = "DojoModel"
-class_hash = "0x2671aaa6f4eb41826c37c98962306dc8899606e00087f50f9f07895b9370935"
-original_class_hash = "0x2671aaa6f4eb41826c37c98962306dc8899606e00087f50f9f07895b9370935"
+class_hash = "0x76a2693e30dc32e616d15a532a893b059d52af257082582d7ff79a8e78141e5"
+original_class_hash = "0x76a2693e30dc32e616d15a532a893b059d52af257082582d7ff79a8e78141e5"
 abi = "manifests/dev/abis/base/models/starktrip_models_game_game.json"
 name = "starktrip::models::game::game"
 
@@ -12,12 +12,12 @@ key = true
 [[members]]
 name = "spaceship_id"
 type = "u32"
-key = true
+key = false
 
 [[members]]
 name = "board_id"
 type = "u32"
-key = true
+key = false
 
 [[members]]
 name = "score"

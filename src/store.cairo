@@ -20,7 +20,7 @@ impl StoreImpl of StoreTrait {
     }
 
     fn get_game(ref self: Store, id: u32, spaceship_id: u32, board_id: u32) -> Game {
-        get!(self.world, (id, spaceship_id, board_id), (Game))
+        get!(self.world, (id), (Game))
     }
 
     fn set_game(ref self: Store, game: Game) {
@@ -43,8 +43,8 @@ impl StoreImpl of StoreTrait {
         set!(self.world, (leader_board));
     }
 
-    fn get_spaceship(ref self: Store, id: u32, game_id: u32) -> Spaceship {
-        get!(self.world, (id, game_id), (Spaceship))
+    fn get_spaceship(ref self: Store, id: u32) -> Spaceship {
+        get!(self.world, (id), (Spaceship))
     }
 
     fn set_spaceship(ref self: Store, spaceship: Spaceship) {
