@@ -17,19 +17,20 @@ name = "dojo::base::base"
 
 [[contracts]]
 kind = "DojoContract"
-class_hash = "0x1e7ddcd0bb02ce6423456215b71730c3524502d4067674f50233651d57559c0"
-original_class_hash = "0x1e7ddcd0bb02ce6423456215b71730c3524502d4067674f50233651d57559c0"
-base_class_hash = "0x0"
-abi = "abis/deployments/contracts/starktrip_systems_game_game.json"
+address = "0x7d64230848cc3da3acd52e56057bda02261dbc7114f7da56aa1368b57cb4888"
+class_hash = "0x64ec799bcee2a036b13d19307ae2b46ce1d5c87817532d821488fb986b277e7"
+original_class_hash = "0x64ec799bcee2a036b13d19307ae2b46ce1d5c87817532d821488fb986b277e7"
+base_class_hash = "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76"
+abi = "abis/deployments/contracts/starktrip_systems_game_system_game_system.json"
 reads = []
 writes = []
 computed = []
-name = "starktrip::systems::game::game"
+name = "starktrip::systems::game_system::game_system"
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
-original_class_hash = "0x286193d716ff0d1daca38d39a89374a19e4fad48bc5056b785088a47ba2e265"
+class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
+original_class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
 abi = "abis/deployments/models/starktrip_models_board_board.json"
 name = "starktrip::models::board::board"
 
@@ -50,6 +51,11 @@ key = false
 
 [[models.members]]
 name = "max_movements"
+type = "u16"
+key = false
+
+[[models.members]]
+name = "animals_to_deliver"
 type = "u8"
 key = false
 
@@ -136,8 +142,8 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x17920d146846f548c1b94cab55e3196f954ac637211befa4e142122146bda57"
-original_class_hash = "0x17920d146846f548c1b94cab55e3196f954ac637211befa4e142122146bda57"
+class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
+original_class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
 abi = "abis/deployments/models/starktrip_models_spaceship_spaceship.json"
 name = "starktrip::models::spaceship::spaceship"
 
@@ -153,7 +159,7 @@ key = false
 
 [[models.members]]
 name = "node_id"
-type = "felt252"
+type = "u32"
 key = false
 
 [[models.members]]

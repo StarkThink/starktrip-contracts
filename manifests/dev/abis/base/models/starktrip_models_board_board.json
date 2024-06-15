@@ -190,6 +190,10 @@
       },
       {
         "name": "max_movements",
+        "type": "core::integer::u16"
+      },
+      {
+        "name": "animals_to_deliver",
         "type": "core::integer::u8"
       }
     ]
