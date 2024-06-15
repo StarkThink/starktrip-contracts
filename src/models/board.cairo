@@ -2,8 +2,9 @@
 struct Board {
     #[key]
     id: u32,
+    root: felt252,
+    children: Vec<u32>,
     game_id: u32,
-    rows: u8,
     max_movements: u16,
     animals_to_deliver: u8
 }
