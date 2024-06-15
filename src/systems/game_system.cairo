@@ -12,7 +12,7 @@ mod game_system {
     use starktrip::models::game::Game;
     use starktrip::models::board::Board;
     use starktrip::models::spaceship::Spaceship;
-    use starktrip::events::{GameOver, GameWin, CreateGame};
+    use starktrip::models::events::{GameOver, GameWin, CreateGame};
     use starktrip::store::{Store, StoreTrait};
     use starknet::get_caller_address;
 
@@ -45,13 +45,11 @@ mod game_system {
             let board = store.get_board(board_id);
             let max_movements = board.max_movements;
 
-            let caller = get_caller_address();
-
             if movements <= max_movements {
                 movements += 1;
             } else {
-                let _event = GameOver { game_id: id, player_address: caller };
-                emit!(world, (Event::GameOver(_event)));
+                let GameOverEvent = GameOver { game_id: id, player_address: get_caller_address() };
+                emit!(world, (GameOverEvent));
             }
 
             let mut round = game.round;
@@ -61,13 +59,15 @@ mod game_system {
             let animals_to_deliver = board.animals_to_deliver;
 
             if delivered_animals == animals_to_deliver {
-                let _event = GameWin {
-                    game_id: id, player_address: caller, round: round, score: score
+                let GameWinEvent = GameWin {
+                    game_id: id, player_address: get_caller_address(), round: round, score: score
                 };
-                emit!(world, (Event::GameWin(_event)));
+                emit!(world, (GameWinEvent));
 
-                let _event = CreateGame { game_id: id, player_address: caller };
-                emit!(world, (Event::CreateGame(_event)));
+                let CreateGameEvent = CreateGame {
+                    game_id: id, player_address: get_caller_address()
+                };
+                emit!(world, (CreateGameEvent));
             }
         }
     }

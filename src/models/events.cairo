@@ -1,14 +1,15 @@
 use starknet::ContractAddress;
 
-#[derive(Drop, starknet::Event)]
+#[derive(Model, Copy, Drop, Serde)]
+#[dojo::event]
 struct CreateGame {
     #[key]
     game_id: u32,
-    #[key]
     player_address: ContractAddress
 }
 
-#[derive(Drop, starknet::Event)]
+#[derive(Model, Copy, Drop, Serde)]
+#[dojo::event]
 struct GameWin {
     #[key]
     game_id: u32,
@@ -18,15 +19,16 @@ struct GameWin {
     score: u32
 }
 
-#[derive(Drop, starknet::Event)]
+#[derive(Model, Copy, Drop, Serde)]
+#[dojo::event]
 struct GameOver {
     #[key]
     game_id: u32,
-    #[key]
     player_address: ContractAddress
 }
 
-#[derive(Drop, starknet::Event)]
+#[derive(Model, Copy, Drop, Serde)]
+#[dojo::event]
 struct Game {
     #[key]
     id: u32,
