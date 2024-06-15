@@ -2,7 +2,7 @@ mod events;
 mod store;
 
 mod systems {
-    mod game;
+    mod game_system;
 }
 
 mod models {
