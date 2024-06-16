@@ -177,23 +177,23 @@
     "name": "starktrip::models::spaceship::Spaceship",
     "members": [
       {
-        "name": "id",
-        "type": "core::integer::u32"
-      },
-      {
         "name": "game_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "node_id",
-        "type": "core::integer::u32"
+        "name": "pos_x",
+        "type": "core::integer::u8"
       },
       {
-        "name": "movements",
-        "type": "core::integer::u16"
+        "name": "pos_y",
+        "type": "core::integer::u8"
       },
       {
-        "name": "delivered_animals",
+        "name": "remaining_gas",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "len_characters_inside",
         "type": "core::integer::u8"
       }
     ]

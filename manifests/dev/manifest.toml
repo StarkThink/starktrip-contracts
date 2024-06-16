@@ -18,8 +18,8 @@ name = "dojo::base::base"
 [[contracts]]
 kind = "DojoContract"
 address = "0x7d64230848cc3da3acd52e56057bda02261dbc7114f7da56aa1368b57cb4888"
-class_hash = "0x756d73e824435b9d3ddef40a8a70dd542852e9b325dc17700fc605986a0eeda"
-original_class_hash = "0x756d73e824435b9d3ddef40a8a70dd542852e9b325dc17700fc605986a0eeda"
+class_hash = "0x36adcc8a561af5a5d456d0d069d12a2e95f80a40cf7d52051f1661e46e2b0b4"
+original_class_hash = "0x36adcc8a561af5a5d456d0d069d12a2e95f80a40cf7d52051f1661e46e2b0b4"
 base_class_hash = "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76"
 abi = "abis/deployments/contracts/starktrip_systems_game_system_game_system.json"
 reads = []
@@ -29,10 +29,42 @@ name = "starktrip::systems::game_system::game_system"
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
-original_class_hash = "0xba813059a5c4efa70dd718176dbaa5b18142f6914a2e061fe63833f8b913b9"
+class_hash = "0x692c8573b227e84e34e440129ce136576773ecdd245f09e36bfc5b7301492f9"
+original_class_hash = "0x692c8573b227e84e34e440129ce136576773ecdd245f09e36bfc5b7301492f9"
 abi = "abis/deployments/models/starktrip_models_board_board.json"
 name = "starktrip::models::board::board"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "len_rows"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "len_cols"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "max_movements"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "remaining_characters"
+type = "u8"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x8a36d4d5426dc3be371793c9949219df5ac0df6e7e25c7edea603ddff2e21d"
+original_class_hash = "0x8a36d4d5426dc3be371793c9949219df5ac0df6e7e25c7edea603ddff2e21d"
+abi = "abis/deployments/models/starktrip_models_characters_inside_characters_inside.json"
+name = "starktrip::models::characters_inside::characters_inside"
 
 [[models.members]]
 name = "id"
@@ -42,21 +74,11 @@ key = true
 [[models.members]]
 name = "game_id"
 type = "u32"
-key = false
+key = true
 
 [[models.members]]
-name = "rows"
-type = "u8"
-key = false
-
-[[models.members]]
-name = "max_movements"
-type = "u16"
-key = false
-
-[[models.members]]
-name = "animals_to_deliver"
-type = "u8"
+name = "value"
+type = "felt252"
 key = false
 
 [[models]]
@@ -169,8 +191,8 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x76a2693e30dc32e616d15a532a893b059d52af257082582d7ff79a8e78141e5"
-original_class_hash = "0x76a2693e30dc32e616d15a532a893b059d52af257082582d7ff79a8e78141e5"
+class_hash = "0x78c3e98128fccdfab792555054a0fa6ef912fdd25671ace7ae7781148b90f8a"
+original_class_hash = "0x78c3e98128fccdfab792555054a0fa6ef912fdd25671ace7ae7781148b90f8a"
 abi = "abis/deployments/models/starktrip_models_game_game.json"
 name = "starktrip::models::game::game"
 
@@ -178,16 +200,6 @@ name = "starktrip::models::game::game"
 name = "id"
 type = "u32"
 key = true
-
-[[models.members]]
-name = "spaceship_id"
-type = "u32"
-key = false
-
-[[models.members]]
-name = "board_id"
-type = "u32"
-key = false
 
 [[models.members]]
 name = "score"
@@ -216,44 +228,10 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x492bdc05dbcdb9fc9ab09befcb6e8238dd99e94237454824280f60229818723"
-original_class_hash = "0x492bdc05dbcdb9fc9ab09befcb6e8238dd99e94237454824280f60229818723"
+class_hash = "0x4fe726e0fc3b6f14c1beab90317c04b167573a30804ed38b6770ce5e8bb37af"
+original_class_hash = "0x4fe726e0fc3b6f14c1beab90317c04b167573a30804ed38b6770ce5e8bb37af"
 abi = "abis/deployments/models/starktrip_models_leader_board_leader_board.json"
 name = "starktrip::models::leader_board::leader_board"
-
-[[models.members]]
-name = "players"
-type = "Players"
-key = true
-
-[[models.members]]
-name = "score"
-type = "u32"
-key = false
-
-[[models]]
-kind = "DojoModel"
-class_hash = "0x544a4e9400ced9c1e589033064c3bc0fae6cf072619f5fd6fcb656d12a5e5da"
-original_class_hash = "0x544a4e9400ced9c1e589033064c3bc0fae6cf072619f5fd6fcb656d12a5e5da"
-abi = "abis/deployments/models/starktrip_models_leader_board_players.json"
-name = "starktrip::models::leader_board::players"
-
-[[models.members]]
-name = "player"
-type = "ContractAddress"
-key = true
-
-[[models.members]]
-name = "score"
-type = "u32"
-key = false
-
-[[models]]
-kind = "DojoModel"
-class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
-original_class_hash = "0x3200ff95253405b087f33d14cb4ea451864b56d145c1343af5c2e4c14e3437"
-abi = "abis/deployments/models/starktrip_models_spaceship_spaceship.json"
-name = "starktrip::models::spaceship::spaceship"
 
 [[models.members]]
 name = "id"
@@ -261,21 +239,87 @@ type = "u32"
 key = true
 
 [[models.members]]
-name = "game_id"
-type = "u32"
-key = false
-
-[[models.members]]
-name = "node_id"
-type = "u32"
-key = false
-
-[[models.members]]
-name = "movements"
+name = "len_players"
 type = "u16"
 key = false
 
+[[models]]
+kind = "DojoModel"
+class_hash = "0x40970333f07645d666bd36e7cbffcbdad3de9c92bd0e8b59d8a97bd19f50e99"
+original_class_hash = "0x40970333f07645d666bd36e7cbffcbdad3de9c92bd0e8b59d8a97bd19f50e99"
+abi = "abis/deployments/models/starktrip_models_leader_board_players_leader_board_players.json"
+name = "starktrip::models::leader_board_players::leader_board_players"
+
 [[models.members]]
-name = "delivered_animals"
+name = "id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "player_name"
+type = "felt252"
+key = false
+
+[[models.members]]
+name = "score"
+type = "u32"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x66b17153cc4a99ecc443e119ad2cd3e79dd783eb910adeda28db8d211d69843"
+original_class_hash = "0x66b17153cc4a99ecc443e119ad2cd3e79dd783eb910adeda28db8d211d69843"
+abi = "abis/deployments/models/starktrip_models_spaceship_spaceship.json"
+name = "starktrip::models::spaceship::spaceship"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "pos_x"
 type = "u8"
+key = false
+
+[[models.members]]
+name = "pos_y"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "remaining_gas"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "len_characters_inside"
+type = "u8"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x4c8b0840fc33053003dcfdc0530599403c664bf5ca3aafb57f36aa96743a8ee"
+original_class_hash = "0x4c8b0840fc33053003dcfdc0530599403c664bf5ca3aafb57f36aa96743a8ee"
+abi = "abis/deployments/models/starktrip_models_tile_tile.json"
+name = "starktrip::models::tile::tile"
+
+[[models.members]]
+name = "row_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "col_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "value"
+type = "felt252"
 key = false

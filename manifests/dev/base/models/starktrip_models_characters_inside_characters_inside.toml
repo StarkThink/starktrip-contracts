@@ -1,0 +1,20 @@
+kind = "DojoModel"
+class_hash = "0x8a36d4d5426dc3be371793c9949219df5ac0df6e7e25c7edea603ddff2e21d"
+original_class_hash = "0x8a36d4d5426dc3be371793c9949219df5ac0df6e7e25c7edea603ddff2e21d"
+abi = "manifests/dev/abis/base/models/starktrip_models_characters_inside_characters_inside.json"
+name = "starktrip::models::characters_inside::characters_inside"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "value"
+type = "felt252"
+key = false

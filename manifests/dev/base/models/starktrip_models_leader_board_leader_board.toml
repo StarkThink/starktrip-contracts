@@ -1,15 +1,15 @@
 kind = "DojoModel"
-class_hash = "0x492bdc05dbcdb9fc9ab09befcb6e8238dd99e94237454824280f60229818723"
-original_class_hash = "0x492bdc05dbcdb9fc9ab09befcb6e8238dd99e94237454824280f60229818723"
+class_hash = "0x4fe726e0fc3b6f14c1beab90317c04b167573a30804ed38b6770ce5e8bb37af"
+original_class_hash = "0x4fe726e0fc3b6f14c1beab90317c04b167573a30804ed38b6770ce5e8bb37af"
 abi = "manifests/dev/abis/base/models/starktrip_models_leader_board_leader_board.json"
 name = "starktrip::models::leader_board::leader_board"
 
 [[members]]
-name = "players"
-type = "Players"
+name = "id"
+type = "u32"
 key = true
 
 [[members]]
-name = "score"
-type = "u32"
+name = "len_players"
+type = "u16"
 key = false

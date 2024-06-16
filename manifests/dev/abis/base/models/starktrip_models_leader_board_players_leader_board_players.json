@@ -169,26 +169,30 @@
   },
   {
     "type": "impl",
-    "name": "leader_boardImpl",
-    "interface_name": "starktrip::models::leader_board::Ileader_board"
+    "name": "leader_board_playersImpl",
+    "interface_name": "starktrip::models::leader_board_players::Ileader_board_players"
   },
   {
     "type": "struct",
-    "name": "starktrip::models::leader_board::LeaderBoard",
+    "name": "starktrip::models::leader_board_players::LeaderBoardPlayers",
     "members": [
       {
         "name": "id",
         "type": "core::integer::u32"
       },
       {
-        "name": "len_players",
-        "type": "core::integer::u16"
+        "name": "player_name",
+        "type": "core::felt252"
+      },
+      {
+        "name": "score",
+        "type": "core::integer::u32"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "starktrip::models::leader_board::Ileader_board",
+    "name": "starktrip::models::leader_board_players::Ileader_board_players",
     "items": [
       {
         "type": "function",
@@ -196,7 +200,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "starktrip::models::leader_board::LeaderBoard"
+            "type": "starktrip::models::leader_board_players::LeaderBoardPlayers"
           }
         ],
         "outputs": [],
@@ -206,7 +210,7 @@
   },
   {
     "type": "event",
-    "name": "starktrip::models::leader_board::leader_board::Event",
+    "name": "starktrip::models::leader_board_players::leader_board_players::Event",
     "kind": "enum",
     "variants": []
   }
