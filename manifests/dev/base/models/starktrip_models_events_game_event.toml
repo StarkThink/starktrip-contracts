@@ -1,0 +1,45 @@
+kind = "DojoModel"
+class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
+original_class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
+abi = "manifests/dev/abis/base/models/starktrip_models_events_game_event.json"
+name = "starktrip::models::events::game_event"
+
+[[members]]
+name = "id"
+type = "u32"
+key = true
+
+[[members]]
+name = "spaceship_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "board_id"
+type = "u32"
+key = true
+
+[[members]]
+name = "score"
+type = "u32"
+key = false
+
+[[members]]
+name = "round"
+type = "u32"
+key = false
+
+[[members]]
+name = "player_name"
+type = "felt252"
+key = false
+
+[[members]]
+name = "owner"
+type = "ContractAddress"
+key = false
+
+[[members]]
+name = "state"
+type = "bool"
+key = false

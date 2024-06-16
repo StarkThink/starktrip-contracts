@@ -1,4 +1,3 @@
-mod events;
 mod store;
 
 mod systems {
@@ -10,6 +9,7 @@ mod models {
     mod game;
     mod board;
     mod leader_board;
+    mod events;
 }
 
 mod tests {}
