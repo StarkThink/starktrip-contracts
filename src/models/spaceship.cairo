@@ -4,7 +4,7 @@ struct Spaceship {
     id: u32,
     game_id: u32,
     node_id: u32,
-    movements: u16,
+    movements: u8,
     delivered_animals: u8
 }
 
@@ -12,7 +12,7 @@ struct Spaceship {
 impl SpaceshipImpl of SpaceshipTrait {
     #[inline(always)]
     fn new(
-        id: u32, game_id: u32, node_id: u32, movements: u16, delivered_animals: u8
+        id: u32, game_id: u32, node_id: u32, movements: u8, delivered_animals: u8
     ) -> Spaceship {
         Spaceship { id, game_id, node_id, movements, delivered_animals }
     }

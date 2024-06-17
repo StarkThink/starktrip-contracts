@@ -1,4 +1,5 @@
 use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
+use alexandria_data_structures::queue::{Queue, QueueTrait};
 
 #[dojo::interface]
 trait IGameSystem {
