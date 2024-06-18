@@ -195,14 +195,6 @@
         "type": "core::integer::u32"
       },
       {
-        "name": "spaceship_id",
-        "type": "core::integer::u32"
-      },
-      {
-        "name": "board_id",
-        "type": "core::integer::u32"
-      },
-      {
         "name": "score",
         "type": "core::integer::u32"
       },

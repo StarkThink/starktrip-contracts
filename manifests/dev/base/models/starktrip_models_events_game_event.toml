@@ -1,21 +1,11 @@
 kind = "DojoModel"
-class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
-original_class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
+class_hash = "0x1858c778a8e786dca7942ea429fdb02fa778319b6f96ec6d00a81402089c7d5"
+original_class_hash = "0x1858c778a8e786dca7942ea429fdb02fa778319b6f96ec6d00a81402089c7d5"
 abi = "manifests/dev/abis/base/models/starktrip_models_events_game_event.json"
 name = "starktrip::models::events::game_event"
 
 [[members]]
 name = "id"
-type = "u32"
-key = true
-
-[[members]]
-name = "spaceship_id"
-type = "u32"
-key = true
-
-[[members]]
-name = "board_id"
 type = "u32"
 key = true
 

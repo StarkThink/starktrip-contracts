@@ -100,23 +100,13 @@ key = false
 
 [[models]]
 kind = "DojoModel"
-class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
-original_class_hash = "0x51b704fe614212b7b4e2531e9bfde2701a8ebd7fb740a848bbc6ffc3aba44ab"
+class_hash = "0x1858c778a8e786dca7942ea429fdb02fa778319b6f96ec6d00a81402089c7d5"
+original_class_hash = "0x1858c778a8e786dca7942ea429fdb02fa778319b6f96ec6d00a81402089c7d5"
 abi = "abis/deployments/models/starktrip_models_events_game_event.json"
 name = "starktrip::models::events::game_event"
 
 [[models.members]]
 name = "id"
-type = "u32"
-key = true
-
-[[models.members]]
-name = "spaceship_id"
-type = "u32"
-key = true
-
-[[models.members]]
-name = "board_id"
 type = "u32"
 key = true
 
@@ -187,6 +177,33 @@ key = false
 [[models.members]]
 name = "score"
 type = "u32"
+key = false
+
+[[models]]
+kind = "DojoModel"
+class_hash = "0x77ccacdbfc50c17edd8d2bd6fe5adfb793be4d999e9e5155b2c78ee06367892"
+original_class_hash = "0x77ccacdbfc50c17edd8d2bd6fe5adfb793be4d999e9e5155b2c78ee06367892"
+abi = "abis/deployments/models/starktrip_models_events_move.json"
+name = "starktrip::models::events::move"
+
+[[models.members]]
+name = "game_id"
+type = "u32"
+key = true
+
+[[models.members]]
+name = "pos_x"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "pos_y"
+type = "u8"
+key = false
+
+[[models.members]]
+name = "remaining_gas"
+type = "u8"
 key = false
 
 [[models]]

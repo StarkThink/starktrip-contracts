@@ -32,13 +32,19 @@ struct GameOver {
 struct GameEvent {
     #[key]
     id: u32,
-    #[key]
-    spaceship_id: u32,
-    #[key]
-    board_id: u32,
     score: u32,
     round: u32,
     player_name: felt252,
     owner: ContractAddress,
     state: bool
+}
+
+#[derive(Model, Copy, Drop, Serde)]
+#[dojo::event]
+struct Move {
+    #[key]
+    game_id: u32,
+    pos_x: u8,
+    pos_y: u8,
+    remaining_gas: u8
 }
