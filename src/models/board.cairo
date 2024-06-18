@@ -1,4 +1,3 @@
-#[derive(Model, Copy, Drop, Serde)]
 struct Board {
     #[key]
     game_id: u32,
@@ -17,3 +16,4 @@ impl BoardImpl of BoardTrait {
         Board { game_id, len_rows, len_cols, max_movements, remaining_characters }
     }
 }
+
