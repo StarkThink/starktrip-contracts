@@ -3,7 +3,7 @@ use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
 #[dojo::interface]
 trait IGameSystem {
     fn create_game(player_name: felt252) -> felt252;
-    fn move(node_id: u32, id: u32);
+    fn move(id: u32);
 }
 
 #[dojo::contract]
@@ -22,23 +22,19 @@ mod game_system {
             player_name
         }
 
-        fn move(world: IWorldDispatcher, node_id: u32, id: u32) {
+        fn move(world: IWorldDispatcher, id: u32) {
             let mut store: Store = StoreTrait::new(world);
 
             let game: Game = store.get_game(id);
 
-            let spaceship_id = game.spaceship_id;
-            let mut spaceship = store.get_spaceship(spaceship_id);
-            spaceship.node_id = node_id;
+            let spaceship = store.get_spaceship(id);
+            let mut remaining_gas = spaceship.remaining_gas;
 
-            let mut movements = spaceship.movements;
+            let board = store.get_board(id);
+            let mut max_movements = board.max_movements;
 
-            let board_id = game.board_id;
-            let board = store.get_board(board_id);
-            let max_movements = board.max_movements;
-
-            if movements <= max_movements {
-                movements += 1;
+            if remaining_gas <= max_movements {
+                remaining_gas -= 1;
             } else {
                 let GameOverEvent = GameOver { game_id: id, player_address: get_caller_address() };
                 emit!(world, (GameOverEvent));
@@ -47,10 +43,9 @@ mod game_system {
             let mut round = game.round;
             let mut score = game.score;
 
-            let mut delivered_animals = spaceship.delivered_animals;
-            let animals_to_deliver = board.animals_to_deliver;
+            let mut remaining_characters = board.remaining_characters;
 
-            if delivered_animals == animals_to_deliver {
+            if remaining_characters == 0 {
                 let GameWinEvent = GameWin {
                     game_id: id, player_address: get_caller_address(), round: round, score: score
                 };

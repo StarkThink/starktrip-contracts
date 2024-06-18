@@ -174,29 +174,15 @@
   },
   {
     "type": "struct",
-    "name": "starktrip::models::leader_board::Players",
-    "members": [
-      {
-        "name": "player",
-        "type": "core::starknet::contract_address::ContractAddress"
-      },
-      {
-        "name": "score",
-        "type": "core::integer::u32"
-      }
-    ]
-  },
-  {
-    "type": "struct",
     "name": "starktrip::models::leader_board::LeaderBoard",
     "members": [
       {
-        "name": "players",
-        "type": "starktrip::models::leader_board::Players"
+        "name": "id",
+        "type": "core::integer::u32"
       },
       {
-        "name": "score",
-        "type": "core::integer::u32"
+        "name": "len_players",
+        "type": "core::integer::u16"
       }
     ]
   },

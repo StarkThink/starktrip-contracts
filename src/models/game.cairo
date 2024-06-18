@@ -4,8 +4,6 @@ use starknet::ContractAddress;
 struct Game {
     #[key]
     id: u32,
-    spaceship_id: u32,
-    board_id: u32,
     score: u32,
     round: u32,
     player_name: felt252,
@@ -17,15 +15,8 @@ struct Game {
 impl GameImpl of GameTrait {
     #[inline(always)]
     fn new(
-        id: u32,
-        spaceship_id: u32,
-        board_id: u32,
-        score: u32,
-        round: u32,
-        player_name: felt252,
-        owner: ContractAddress,
-        state: bool
+        id: u32, score: u32, round: u32, player_name: felt252, owner: ContractAddress, state: bool
     ) -> Game {
-        Game { id, spaceship_id, board_id, score: 0, round: 1, player_name, owner, state: true }
+        Game { id, score: 0, round: 1, player_name, owner, state: true }
     }
 }

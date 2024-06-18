@@ -177,23 +177,23 @@
     "name": "starktrip::models::board::Board",
     "members": [
       {
-        "name": "id",
-        "type": "core::integer::u32"
-      },
-      {
         "name": "game_id",
         "type": "core::integer::u32"
       },
       {
-        "name": "rows",
+        "name": "len_rows",
+        "type": "core::integer::u8"
+      },
+      {
+        "name": "len_cols",
         "type": "core::integer::u8"
       },
       {
         "name": "max_movements",
-        "type": "core::integer::u16"
+        "type": "core::integer::u8"
       },
       {
-        "name": "animals_to_deliver",
+        "name": "remaining_characters",
         "type": "core::integer::u8"
       }
     ]

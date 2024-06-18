@@ -10,6 +10,9 @@ mod models {
     mod board;
     mod leader_board;
     mod events;
+    mod characters_inside;
+    mod leader_board_players;
+    mod tile;
 }
 
 mod tests {}

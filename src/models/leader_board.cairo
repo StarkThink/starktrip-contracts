@@ -1,23 +1,14 @@
-use starknet::ContractAddress;
-
 #[derive(Model, Copy, Drop, Serde)]
 struct LeaderBoard {
     #[key]
-    players: Players,
-    score: u32
-}
-
-#[derive(Model, Copy, Drop, Serde)]
-struct Players {
-    #[key]
-    player: ContractAddress,
-    score: u32
+    id: u32,
+    len_players: u16
 }
 
 #[generate_trait]
 impl LeaderBoardImpl of LeaderBoardTrait {
     #[inline(always)]
-    fn new(players: Players, score: u32) -> LeaderBoard {
-        LeaderBoard { players, score }
+    fn new(id: u32, len_players: u16) -> LeaderBoard {
+        LeaderBoard { id, len_players }
     }
 }

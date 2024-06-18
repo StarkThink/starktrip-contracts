@@ -169,26 +169,34 @@
   },
   {
     "type": "impl",
-    "name": "playersImpl",
-    "interface_name": "starktrip::models::leader_board::Iplayers"
+    "name": "tileImpl",
+    "interface_name": "starktrip::models::tile::Itile"
   },
   {
     "type": "struct",
-    "name": "starktrip::models::leader_board::Players",
+    "name": "starktrip::models::tile::Tile",
     "members": [
       {
-        "name": "player",
-        "type": "core::starknet::contract_address::ContractAddress"
+        "name": "row_id",
+        "type": "core::integer::u32"
       },
       {
-        "name": "score",
+        "name": "col_id",
         "type": "core::integer::u32"
+      },
+      {
+        "name": "game_id",
+        "type": "core::integer::u32"
+      },
+      {
+        "name": "value",
+        "type": "core::felt252"
       }
     ]
   },
   {
     "type": "interface",
-    "name": "starktrip::models::leader_board::Iplayers",
+    "name": "starktrip::models::tile::Itile",
     "items": [
       {
         "type": "function",
@@ -196,7 +204,7 @@
         "inputs": [
           {
             "name": "model",
-            "type": "starktrip::models::leader_board::Players"
+            "type": "starktrip::models::tile::Tile"
           }
         ],
         "outputs": [],
@@ -206,7 +214,7 @@
   },
   {
     "type": "event",
-    "name": "starktrip::models::leader_board::players::Event",
+    "name": "starktrip::models::tile::tile::Event",
     "kind": "enum",
     "variants": []
   }
