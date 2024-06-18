@@ -3,7 +3,7 @@ use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
 #[dojo::interface]
 trait IGameSystem {
     fn create_game(player_name: felt252) -> u32;
-    fn move(node_id: u32, id: u32);
+    fn move(id: u32);
 }
 
 #[dojo::contract]
@@ -12,7 +12,7 @@ mod game_system {
     use starktrip::models::game::{Game, GameTrait};
     use starktrip::models::board::{Board, BoardTrait};
     use starktrip::models::spaceship::{Spaceship, SpaceshipTrait};
-    use starktrip::events::{GameOver, GameWin, CreateGame};
+    use starktrip::models::events::{GameOver, GameWin, CreateGame};
     use starktrip::store::{Store, StoreTrait};
     use starknet::{get_caller_address, get_contract_address};
 
@@ -24,36 +24,36 @@ mod game_system {
             let game_id = world.uuid() + 1;
 
             let board = BoardTrait::new(
-                id: 1,
-                root: 'root',
-                children: ArrayTrait::<u32>::new(),
                 game_id: game_id,
+                len_rows: 0,
+                len_cols: 0,
                 max_movements: 0,
-                animals_to_deliver: 0
+                remaining_characters: 0
             );
 
             let spaceship = SpaceshipTrait::new(
-                id: 1, game_id: game_id, node_id: 1, movements: 0, delivered_animals: 0
+                game_id: game_id, pos_x: 0, pos_y: 0, remaining_gas: 0, len_characters_inside: 0
             );
 
             let owner = get_contract_address();
 
             let game = GameTrait::new(
                 id: game_id,
-                spaceship_id: spaceship.id,
-                board_id: board.id,
                 score: 0,
                 round: 1,
                 player_name: player_name,
                 owner: owner,
-                state: true
+                state: true,
             );
 
             store.set_game(game);
             store.set_board(board);
             store.set_spaceship(spaceship);
 
-            ///TODO: Add create game event
+            let CreateGameEvent = CreateGame {
+                game_id: game_id, player_address: get_caller_address()
+            };
+            emit!(world, (CreateGameEvent));
 
             game_id
         }

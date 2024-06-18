@@ -1,3 +1,4 @@
+#[derive(Model, Copy, Drop, Serde)]
 struct Board {
     #[key]
     game_id: u32,
