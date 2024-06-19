@@ -39,11 +39,10 @@ mod game_system {
 
             let game = GameTrait::new(
                 id: game_id,
-                score: 0,
-                round: 1,
-                player_name: player_name,
                 owner: owner,
-                state: true,
+                player_name: player_name,
+                score: 0,
+                round: 1
             );
 
             store.set_game(game);
@@ -83,7 +82,7 @@ mod game_system {
 
             if remaining_characters == 0 {
                 let GameWinEvent = GameWin {
-                    game_id: id, player_address: get_caller_address(), round: round, score: score
+                    game_id: id, player_address: get_caller_address(), round, score
                 };
                 emit!(world, (GameWinEvent));
 
