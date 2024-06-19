@@ -677,8 +677,8 @@
     {
       "kind": "DojoContract",
       "address": "0x7d64230848cc3da3acd52e56057bda02261dbc7114f7da56aa1368b57cb4888",
-      "class_hash": "0x36adcc8a561af5a5d456d0d069d12a2e95f80a40cf7d52051f1661e46e2b0b4",
-      "original_class_hash": "0x36adcc8a561af5a5d456d0d069d12a2e95f80a40cf7d52051f1661e46e2b0b4",
+      "class_hash": "0x21242d91d9d0e4fd9a1e1b67d3054ce9371999f723b6f0ce5ef151418df4506",
+      "original_class_hash": "0x21242d91d9d0e4fd9a1e1b67d3054ce9371999f723b6f0ce5ef151418df4506",
       "base_class_hash": "0x679177a2cb757694ac4f326d01052ff0963eac0bc2a17116a2b87badcdf6f76",
       "abi": [
         {
@@ -755,7 +755,7 @@
               ],
               "outputs": [
                 {
-                  "type": "core::felt252"
+                  "type": "core::integer::u32"
                 }
               ],
               "state_mutability": "view"

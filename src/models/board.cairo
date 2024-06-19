@@ -17,3 +17,4 @@ impl BoardImpl of BoardTrait {
         Board { game_id, len_rows, len_cols, max_movements, remaining_characters }
     }
 }
+
