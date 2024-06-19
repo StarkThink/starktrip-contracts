@@ -35,7 +35,7 @@ mod game_system {
                 game_id: game_id, pos_x: 0, pos_y: 0, remaining_gas: 0, len_characters_inside: 0
             );
 
-            let owner = get_contract_address();
+            let owner = get_caller_address();
 
             let game = GameTrait::new(
                 id: game_id,
@@ -51,7 +51,7 @@ mod game_system {
             store.set_spaceship(spaceship);
 
             let CreateGameEvent = CreateGame {
-                game_id: game_id, player_address: get_caller_address()
+                game_id: game_id, player_address: owner
             };
             emit!(world, (CreateGameEvent));
 
