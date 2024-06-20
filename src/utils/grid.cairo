@@ -56,7 +56,7 @@ impl CellIntoFelt252 of Into<Cell, felt252> {
 impl CellImpl of CellTrait {
     fn random(world: IWorldDispatcher) -> Cell {
         let mut randomizer = RandomImpl::new(world);
-        let random_number = randomizer.between::<u32>(0, 9);
+        let random_number = randomizer.between::<u8>(0, 9);
         match random_number {
             0 => Cell::Empty,
             1 => Cell::Wall,
@@ -88,6 +88,49 @@ fn should_paint_wall(row: u8, col: u8, ref randomizer: Random) -> bool {
     randomizer.bool()
 }
 
+fn element_pending(current_elements: Span<Cell>, random_element: Cell) -> bool {
+    let mut i = 0;
+    let result = loop {
+        if  i == current_elements.len() {
+            break true;
+        }
+        if *current_elements.at(i) == random_element {
+            break false;
+        }
+        i += 1;
+    };
+    result
+}
+
+fn get_random_element(ref randomizer: Random, current_elements: Span<Cell>) -> Cell {
+    let mut element_placed = false;
+    let random_element = loop {
+        let mut random_selector = randomizer.between::<u8>(0, 9);
+        if random_selector == 1 {
+            continue;
+        }
+        let random_element = match random_selector {
+            0 => Cell::Empty,
+            1 => Cell::Wall,
+            2 => Cell::Alien,
+            3 => Cell::Alien2,
+            4 => Cell::Ghost,
+            5 => Cell::Dino,
+            6 => Cell::AlienPlanet,
+            7 => Cell::Alien2Planet,
+            8 => Cell::GhostPlanet,
+            9 => Cell::DinoPlanet,
+            _ => Cell::Wall, // default case, should not happen
+        };
+
+        element_placed = element_pending(current_elements, random_element);
+        if element_placed {
+            break random_element;
+        }
+    };
+    random_element
+}
+
 fn get_row(map: Span<Cell>, len_cols: u8, row: u8) -> Array<Cell> {
     let index: u32 = ((row * len_cols)).into();
     let mut row = array![];
@@ -107,14 +150,15 @@ fn get_matrix_index(len_cols: u8, row: u8, col: u8) -> u32 {
 }
 
 fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row: u8 ) -> Array<u32> {
-    let mut row_below = ArrayTrait::<Cell>::new();
     let mut result = ArrayTrait::<u32>::new();
+
+    let mut row_below = ArrayTrait::<Cell>::new();
     if len_rows > row + 1 {
         row_below = get_row(map, len_cols, row + 1);
     }
     let mut row_above = ArrayTrait::<Cell>::new();
     if row > 0 {
-        row_below = get_row(map, len_cols, row - 1);
+        row_above = get_row(map, len_cols, row - 1);
     }
 
     let mut current_row = get_row(map, len_cols, row);
@@ -129,19 +173,19 @@ fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row:
                 trapped_start_index = i;
             }
             empty_found = true;
-            if row_below.len() > 0 && *row_below.at(i.into()) == Cell::Empty {
-                trapped_empty = false;
-            } else if row_above.len() > 0 && *row_above.at(i.into()) == Cell::Empty {
+            if (row_below.len() > 0 && *row_below.at(i.into()) == Cell::Empty) 
+            || (row_above.len() > 0 && *row_above.at(i.into()) == Cell::Empty) 
+            {
                 trapped_empty = false;
             } else {
-             trapped_empty = true;
+                trapped_empty = true;
             }
         }
         if ((i+1) == len_cols) || *current_row.at(i.into()) == Cell::Wall {
             index_to_update = i;
             if trapped_empty && empty_found {
                 // We should only modify walls if one of index x, or y is not even.
-                if index_to_update % 2 == 0 && row % 2 == 0 {
+                if (index_to_update % 2 == 0) ^ (row % 2 == 0) {
                     if index_to_update > 0 && (index_to_update - 1) >= trapped_start_index {
                         index_to_update -= 1;
                     }
@@ -200,8 +244,6 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
                 break;
             }
             let index = index_to_update_row.pop_front().unwrap();
-            let index_felt: felt252 = index.into();
-            println!("Index: {}", index_felt);
             index_to_update.append(index);
         };
         x_index += 1;
@@ -228,61 +270,23 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
         map_index += 1;
         result.append(value_to_store);
     };
-    // let characters = [
-    //     Cell::Alien,
-    //     Cell::Alien2,
-    //     Cell::Ghost,
-    //     Cell::Dino,
-    //     Cell::AlienPlanet,
-    //     Cell::Alien2Planet,
-    //     Cell::GhostPlanet,
-    //     Cell::DinoPlanet,
-    // ];
-    
-    
-    // for &character in &characters {
-    //     let mut placed = false;
-    //     while !placed {
-    //         let row = rng.gen_range(0..rows);
-    //         let col = rng.gen_range(0..cols);
-    //         if !placed_characters.contains(&(row, col)) && map[row][col] != Cell::Wall {
-    //             map[row][col] = character;
-    //             placed_characters.insert((row, col));
-    //             placed = true;
-    //         }
-    //     }
-    // }
-    
-    // // Ensure each empty/character/planet space has at least one adjacent wall
-    // for row in 0..rows {
-    //     for col in 0..cols {
-    //         if map[row][col] != Cell::Wall && !has_adjacent_wall(&map, row, col) {
-    //             let adjacent_positions = get_adjacent_positions(rows, cols, row, col);
-    //             for (adj_row, adj_col) in adjacent_positions {
-    //                 if map[adj_row][adj_col] == Cell::Wall {
-    //                     continue;
-    //                 } else {
-    //                     map[adj_row][adj_col] = Cell::Wall;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    
-    result
+
+    let mut i = 0;
+    let mut current_elements = array![];
+    let mut matrix_with_elements = array![];
+    loop {
+        if i == result.len() {
+            break;
+        } 
+        if *result.at(i.into()) == Cell::Empty {
+            let random_element = get_random_element(ref randomizer, current_elements.span());
+            current_elements.append(random_element);
+            matrix_with_elements.append(random_element);
+            
+        } else {
+            matrix_with_elements.append(*result.at(i));
+        }
+        i += 1;
+    };
+    matrix_with_elements
 }
-
-// fn has_adjacent_wall(map: &Vec<Vec<Cell>>, row: usize, col: usize) -> bool {
-//     let adjacent_positions = get_adjacent_positions(map.len(), map[0].len(), row, col);
-//     adjacent_positions.iter().any(|&(adj_row, adj_col)| map[adj_row][adj_col] == Cell::Wall)
-// }
-
-// fn get_adjacent_positions(rows: usize, cols: usize, row: usize, col: usize) -> Vec<(usize, usize)> {
-//     let mut positions = Vec::new();
-//     if row > 0 { positions.push((row - 1, col)); }
-//     if row < rows - 1 { positions.push((row + 1, col)); }
-//     if col > 0 { positions.push((row, col - 1)); }
-//     if col < cols - 1 { positions.push((row, col + 1)); }
-//     positions
-// }
