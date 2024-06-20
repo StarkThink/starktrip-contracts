@@ -215,7 +215,7 @@ fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row:
     result
 }
 
-fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
+fn paint_wall(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
     let mut map: Array<Cell> = ArrayTrait::new();
     let mut randomizer = RandomImpl::new(world);
     
@@ -239,9 +239,15 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
         };
         x_index += 1;
     };
+    map
+}
 
-    x_index = 0;
+fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
+    let mut randomizer = RandomImpl::new(world);
+
+    let mut x_index = 0;
     let mut index_to_update = array![];
+    let mut map = paint_wall(world, rows, cols);
     let mut map_span = map.span();
     loop{
         if x_index == rows {
