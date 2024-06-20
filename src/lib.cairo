@@ -20,6 +20,7 @@ mod models {
     mod tile;
 }
 
+#[cfg(test)]
 mod tests {
     mod setup;
     mod utils;

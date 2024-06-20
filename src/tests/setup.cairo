@@ -6,6 +6,7 @@ mod setup {
     use starktrip::systems::game_system::{game_system, IGameSystemDispatcher, IGameSystemDispatcherTrait};
     use dojo::world::{IWorldDispatcher, IWorldDispatcherTrait};
     use dojo::test_utils::{spawn_test_world, deploy_contract};
+    use starktrip::systems::game_system::{game_system, IGameSystemDispatcher, IGameSystemDispatcherTrait};
 
     fn OWNER() -> ContractAddress {
         starknet::contract_address_const::<'OWNER'>()
