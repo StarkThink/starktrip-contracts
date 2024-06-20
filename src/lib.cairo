@@ -1,5 +1,10 @@
 mod store;
 
+mod utils {
+    mod grid;
+    mod random;
+}
+
 mod systems {
     mod game_system;
 }
@@ -15,4 +20,9 @@ mod models {
     mod tile;
 }
 
-mod tests {}
+#[cfg(test)]
+mod tests {
+    mod setup;
+    mod utils;
+    mod grid_test;
+}
