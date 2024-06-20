@@ -103,6 +103,9 @@ fn element_pending(current_elements: Span<Cell>, random_element: Cell) -> bool {
 }
 
 fn get_random_element(ref randomizer: Random, current_elements: Span<Cell>) -> Cell {
+    if current_elements.len() >= 9 {
+        return Cell::Empty;
+    }
     let mut element_placed = false;
     let random_element = loop {
         let mut random_selector = randomizer.between::<u8>(0, 9);
@@ -147,6 +150,12 @@ fn get_row(map: Span<Cell>, len_cols: u8, row: u8) -> Array<Cell> {
 
 fn get_matrix_index(len_cols: u8, row: u8, col: u8) -> u32 {
     ((row * len_cols) + col).into()
+}
+
+fn get_index_from_matrix_index(matrix_index: u8, len_cols: u8) -> (u8, u8) {
+    let row: u8 = matrix_index / len_cols;
+    let col: u8 = matrix_index % len_cols;
+    (row.into(), col.into())
 }
 
 fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row: u8 ) -> Array<u32> {
@@ -271,20 +280,32 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
         result.append(value_to_store);
     };
 
-    let mut i = 0;
+    let mut i = 0_u8;
     let mut current_elements = array![];
     let mut matrix_with_elements = array![];
+    let mut special_characters_per_line = 3_u8;
     loop {
-        if i == result.len() {
+        if i.into() == result.len() {
             break;
-        } 
-        if *result.at(i.into()) == Cell::Empty {
+        }
+        if i % cols == 0 {
+            special_characters_per_line = 3;
+        }
+        let (x, y) = get_index_from_matrix_index(i, cols);
+        if x % 2 == 0 && y % 2 == 0 && *result.at(i.into()) == Cell::Empty {
             let random_element = get_random_element(ref randomizer, current_elements.span());
-            current_elements.append(random_element);
-            matrix_with_elements.append(random_element);
-            
+            if random_element != Cell::Empty && special_characters_per_line > 0 {
+                special_characters_per_line -= 1;
+            }
+
+            if special_characters_per_line > 0 {
+                current_elements.append(random_element);
+                matrix_with_elements.append(random_element);
+            } else {
+                matrix_with_elements.append(*result.at(i.into()));
+            }
         } else {
-            matrix_with_elements.append(*result.at(i));
+            matrix_with_elements.append(*result.at(i.into()));
         }
         i += 1;
     };
