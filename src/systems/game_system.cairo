@@ -3,7 +3,7 @@ use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
 #[dojo::interface]
 trait IGameSystem {
     fn create_game(player_name: felt252) -> u32;
-    fn move(id: u32);
+    fn move(game_id: u32, pos_x: u8, pos_y: u8);
 }
 
 #[dojo::contract]
@@ -12,10 +12,10 @@ mod game_system {
     use starktrip::models::game::{Game, GameTrait};
     use starktrip::models::board::{Board, BoardTrait};
     use starktrip::models::spaceship::{Spaceship, SpaceshipTrait};
-    use starktrip::models::events::{GameOver, GameWin, CreateGame};
+    use starktrip::models::events::{GameOver, GameWin, CreateGame, Move};
     use starktrip::models::tile::Tile;
     use starktrip::store::{Store, StoreTrait};
-    use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252};
+    use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252, CellTrait};
     use starknet::{get_caller_address, get_contract_address};
     
 
@@ -28,17 +28,10 @@ mod game_system {
             let map = generate_map(world, 7, 5);
             self.store_map(game_id, ref store, @map, 7, 5);
 
-            let board = BoardTrait::new(
-                game_id: game_id,
-                len_rows: 7,
-                len_cols: 5,
-                max_movements: 0,
-                remaining_characters: 0
-            );
+            let max_movements = 10; //TODO
+            let board = self.generate_board(game_id, @map, 7, 5, max_movements);
 
-            let spaceship = SpaceshipTrait::new(
-                game_id: game_id, pos_x: 0, pos_y: 0, remaining_gas: 0, len_characters_inside: 0
-            );
+            let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
 
             let owner = get_caller_address();
 
@@ -62,40 +55,52 @@ mod game_system {
             game_id
         }
 
-        fn move(world: IWorldDispatcher, id: u32) {
+        fn move(world: IWorldDispatcher, game_id: u32, pos_x: u8, pos_y: u8) {
             let mut store: Store = StoreTrait::new(world);
 
-            let game: Game = store.get_game(id);
+            let mut game: Game = store.get_game(game_id);
+            let mut spaceship = store.get_spaceship(game_id);
+            let mut board = store.get_board(game_id);
 
-            let spaceship = store.get_spaceship(id);
-            let mut remaining_gas = spaceship.remaining_gas;
-
-            let board = store.get_board(id);
-            let mut max_movements = board.max_movements;
-
-            if remaining_gas <= max_movements {
-                remaining_gas -= 1;
+            if spaceship.remaining_gas > 0 {
+                spaceship.remaining_gas -= 1;
             } else {
-                let GameOverEvent = GameOver { game_id: id, player_address: get_caller_address() };
+                let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
                 emit!(world, (GameOverEvent));
             }
 
-            let mut round = game.round;
-            let mut score = game.score;
+            let cell = self.get_cell_at(ref store, game_id, pos_x.into(), pos_y.into());
+            if cell.is_character() {
+                spaceship.len_characters_inside += 1;
+            }
 
-            let mut remaining_characters = board.remaining_characters;
+            if cell.is_planet() {
+                let character_removed = self.remove_character_for_planet(game_id, spaceship, ref store, cell);
+                if character_removed {
+                    // since we removed a character, we need to update the spaceship
+                    spaceship = store.get_spaceship(game_id);
+                    board.remaining_characters -= 1;
+                }
+            }
 
-            if remaining_characters == 0 {
+            if board.remaining_characters == 0 {
                 let GameWinEvent = GameWin {
-                    game_id: id, player_address: get_caller_address(), round, score
+                    game_id: game_id, player_address: get_caller_address(), round: game.round, score: game.score
                 };
                 emit!(world, (GameWinEvent));
-
-                let CreateGameEvent = CreateGame {
-                    game_id: id, player_address: get_caller_address()
-                };
-                emit!(world, (CreateGameEvent));
+                game.score += 10;
+                store.set_game(game);
             }
+
+            let moveEvent = Move {
+                game_id: game_id,
+                pos_x: pos_x,
+                pos_y: pos_y,
+                remaining_gas: spaceship.remaining_gas
+            };
+            emit!(world, (moveEvent));
+            store.set_spaceship(spaceship);
+            store.set_board(board);
         }
     }
 
@@ -125,6 +130,153 @@ mod game_system {
                 };
                 x_index += 1;
             };
+        }
+
+        fn felt252_to_cell(self: @ContractState, value: felt252) -> Cell {
+            let mut result = Cell::Empty;
+            if value == 'empty' {
+                result = Cell::Empty;
+            } else if value == 'wall' {
+                result = Cell::Wall;
+            } else if value == 'alien' {
+                result = Cell::Alien;
+            } else if value == 'alien2' {
+                result = Cell::Alien2;
+            } else if value == 'ghost' {
+                result = Cell::Ghost;
+            } else if value == 'dino' {
+                result = Cell::Dino;
+            } else if value == 'alien_p' {
+                result = Cell::AlienPlanet;
+            } else if value == 'alien2_p' {
+                result = Cell::Alien2Planet;
+            } else if value == 'ghost_p' {
+                result = Cell::GhostPlanet;
+            } else if value == 'dino_p' {
+                result = Cell::DinoPlanet;
+            } else if value == 'player' {
+                result = Cell::Player;
+            } else {
+                result = Cell::Wall;
+            }
+            result
+        }
+
+        fn get_cell_at(self: @ContractState, ref store: Store, game_id: u32, row_id: u32, col_id: u32) -> Cell {
+            let tile = store.get_tile(game_id, row_id, col_id);
+            self.felt252_to_cell(tile.value)
+        }
+
+        fn generate_board(
+            self: @ContractState, game_id: u32, map: @Array<Cell>, rows: u8, cols: u8, max_movements: u8
+        ) -> Board {
+            let mut i = 0_u8;
+            let mut characters_inside = 0;
+            loop {
+                if i.into() == map.len() {
+                    break;
+                }
+                let cell = *map.at(i.into());
+                if cell.is_character() {
+                    characters_inside += 1;
+                }
+                i += 1;
+            };
+            Board {
+                game_id: game_id,
+                len_rows: rows,
+                len_cols: cols,
+                max_movements: max_movements,
+                remaining_characters: characters_inside
+            }
+        }
+
+        fn generate_spaceship(
+            self: @ContractState, game_id: u32, map: @Array<Cell>, rows: u8, cols: u8, remaining_gas: u8
+        ) -> Spaceship {
+            let mut i = 0_u8;
+            let mut x = 0;
+            let mut y = 0;
+            loop {
+                if i.into() == map.len() {
+                    break;
+                }
+                let cell = *map.at(i.into());
+                if cell == Cell::Player {
+                    x = i / cols;
+                    y = i % cols;
+                    break;
+                }
+                i += 1;
+            };
+            Spaceship {
+                game_id: game_id,
+                pos_x: x,
+                pos_y: y,
+                remaining_gas: remaining_gas,
+                len_characters_inside: 0
+            }
+        }
+
+        fn get_characters_inside(
+            self: @ContractState, game_id: u32, spaceship: Spaceship, ref store: Store
+        ) -> Array<Cell> {
+            let mut i = 0;
+            let mut result = array![];
+            loop {
+                if i == spaceship.len_characters_inside {
+                    break;
+                }
+                let character = store.get_characters_inside(id: i.into(), game_id: game_id);
+                result.append(self.felt252_to_cell(character.value));
+                i += 1;
+            };
+            result
+        }
+
+        fn remove_character_inside(
+            self: @ContractState, game_id: u32, mut spaceship: Spaceship, ref store: Store, character: Cell
+        ) {
+            let mut i = 0;
+            loop {
+                if i == spaceship.len_characters_inside {
+                    break;
+                }
+                let character_found = store.get_characters_inside(id: i.into(), game_id: game_id);
+                if self.felt252_to_cell(character_found.value) == character {
+                    if i < (spaceship.len_characters_inside - 1) {
+                        // Move the last element to the current position
+                        let mut last_character = store.get_characters_inside(
+                            id: (spaceship.len_characters_inside - 1).into(), game_id: game_id
+                        );
+                        last_character.id = i.into();
+                        store.set_characters_inside(last_character);
+                    }
+                    spaceship.len_characters_inside -= 1;
+                    store.set_spaceship(spaceship);
+                    break;
+                }
+                i += 1;
+            };
+        }
+
+        fn remove_character_for_planet(
+            self: @ContractState, game_id: u32, mut spaceship: Spaceship, ref store: Store, planet: Cell
+        ) -> bool {
+            let characters = self.get_characters_inside(game_id, spaceship, ref store);
+            let mut i = 0;
+            let result = loop {
+                if i == characters.len() {
+                    break false;
+                }
+                let character = *characters.at(i.into());
+                if character.get_character_planet() == planet {
+                    self.remove_character_inside(game_id, spaceship, ref store, character);
+                    break true;
+                }
+                i += 1;
+            };
+            result
         }
     }
 }

@@ -14,6 +14,7 @@ enum Cell {
     Alien2Planet,
     GhostPlanet,
     DinoPlanet,
+    Player,
 }
 
 impl CellDisplay of Display<Cell> {
@@ -29,6 +30,7 @@ impl CellDisplay of Display<Cell> {
             Cell::Alien2Planet => 8,
             Cell::GhostPlanet => 9,
             Cell::DinoPlanet => 10,
+            Cell::Player => 11,
         };
         write!(f, "{s}")
     }
@@ -47,28 +49,52 @@ impl CellIntoFelt252 of Into<Cell, felt252> {
             Cell::Alien2Planet => 'alien2_p',
             Cell::GhostPlanet => 'ghost_p',
             Cell::DinoPlanet => 'dino_p',
+            Cell::Player => 'player',
         }
     }
-
 }
 
 #[generate_trait]
 impl CellImpl of CellTrait {
-    fn random(world: IWorldDispatcher) -> Cell {
-        let mut randomizer = RandomImpl::new(world);
-        let random_number = randomizer.between::<u8>(0, 9);
-        match random_number {
-            0 => Cell::Empty,
-            1 => Cell::Wall,
-            2 => Cell::Alien,
-            3 => Cell::Alien2,
-            4 => Cell::Ghost,
-            5 => Cell::Dino,
-            6 => Cell::AlienPlanet,
-            7 => Cell::Alien2Planet,
-            8 => Cell::GhostPlanet,
-            9 => Cell::DinoPlanet,
-            _ => Cell::Wall, // default case, should not happen
+    fn is_character(self: Cell) -> bool {
+        match self {
+            Cell::Empty => false,
+            Cell::Wall => false,
+            Cell::Alien => true,
+            Cell::Alien2 => true,
+            Cell::Ghost => true,
+            Cell::Dino => true,
+            Cell::AlienPlanet => false,
+            Cell::Alien2Planet => false,
+            Cell::GhostPlanet => false,
+            Cell::DinoPlanet => false,
+            Cell::Player => false,
+        }
+    }
+
+    fn is_planet(self: Cell) -> bool {
+        match self {
+            Cell::Empty => false,
+            Cell::Wall => false,
+            Cell::Alien => false,
+            Cell::Alien2 => false,
+            Cell::Ghost => false,
+            Cell::Dino => false,
+            Cell::AlienPlanet => true,
+            Cell::Alien2Planet => true,
+            Cell::GhostPlanet => true,
+            Cell::DinoPlanet => true,
+            Cell::Player => false,
+        }
+    }
+
+    fn get_character_planet(self: Cell) -> Cell {
+        match self {
+            Cell::Alien => Cell::AlienPlanet,
+            Cell::Alien2 => Cell::Alien2Planet,
+            Cell::Ghost => Cell::GhostPlanet,
+            Cell::Dino => Cell::DinoPlanet,
+            _ => Cell::Empty, // should not happen
         }
     }
 }
@@ -108,7 +134,7 @@ fn get_random_element(ref randomizer: Random, current_elements: Span<Cell>) -> C
     }
     let mut element_placed = false;
     let random_element = loop {
-        let mut random_selector = randomizer.between::<u8>(0, 9);
+        let mut random_selector = randomizer.between::<u8>(0, 10);
         if random_selector == 1 {
             continue;
         }
@@ -123,6 +149,7 @@ fn get_random_element(ref randomizer: Random, current_elements: Span<Cell>) -> C
             7 => Cell::Alien2Planet,
             8 => Cell::GhostPlanet,
             9 => Cell::DinoPlanet,
+            10 => Cell::Player,
             _ => Cell::Wall, // default case, should not happen
         };
 
@@ -315,5 +342,26 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
         }
         i += 1;
     };
-    matrix_with_elements
+
+    let player_not_placed = element_pending(current_elements.span(), Cell::Player);
+    if player_not_placed {
+        i = 0;
+        let mut matrix_with_player = array![];
+        let mut player_placed = false;
+        loop {
+            if i.into() == matrix_with_elements.len() {
+                break;
+            }
+            if *matrix_with_elements.at(i.into()) == Cell::Empty && player_placed == false {
+                matrix_with_player.append(Cell::Player);
+                player_placed = true;
+            } else {
+                matrix_with_player.append(*matrix_with_elements.at(i.into()));
+            }
+            i += 1;
+        };
+        matrix_with_player
+    } else {
+        matrix_with_elements
+    }
 }
