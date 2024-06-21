@@ -37,16 +37,16 @@ impl CellDisplay of Display<Cell> {
 impl CellIntoFelt252 of Into<Cell, felt252> {
     fn into(self: Cell) -> felt252 {
         match self {
-            Cell::Empty => 1,
-            Cell::Wall => 2,
-            Cell::Alien => 3,
-            Cell::Alien2 => 4,
-            Cell::Ghost => 5,
-            Cell::Dino => 6,
-            Cell::AlienPlanet => 7,
-            Cell::Alien2Planet => 8,
-            Cell::GhostPlanet => 9,
-            Cell::DinoPlanet => 10,
+            Cell::Empty => 'empty',
+            Cell::Wall => 'wall',
+            Cell::Alien => 'alien',
+            Cell::Alien2 => 'alien2',
+            Cell::Ghost => 'ghost',
+            Cell::Dino => 'dino',
+            Cell::AlienPlanet => 'alien_p',
+            Cell::Alien2Planet => 'alien2_p',
+            Cell::GhostPlanet => 'ghost_p',
+            Cell::DinoPlanet => 'dino_p',
         }
     }
 

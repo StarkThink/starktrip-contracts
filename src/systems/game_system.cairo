@@ -13,8 +13,11 @@ mod game_system {
     use starktrip::models::board::{Board, BoardTrait};
     use starktrip::models::spaceship::{Spaceship, SpaceshipTrait};
     use starktrip::models::events::{GameOver, GameWin, CreateGame};
+    use starktrip::models::tile::Tile;
     use starktrip::store::{Store, StoreTrait};
+    use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252};
     use starknet::{get_caller_address, get_contract_address};
+    
 
     #[abi(embed_v0)]
     impl GameImpl of IGameSystem<ContractState> {
@@ -22,11 +25,13 @@ mod game_system {
             let mut store = StoreTrait::new(world);
 
             let game_id = world.uuid() + 1;
+            let map = generate_map(world, 7, 5);
+            self.store_map(game_id, ref store, @map, 7, 5);
 
             let board = BoardTrait::new(
                 game_id: game_id,
-                len_rows: 0,
-                len_cols: 0,
+                len_rows: 7,
+                len_cols: 5,
                 max_movements: 0,
                 remaining_characters: 0
             );
@@ -91,6 +96,35 @@ mod game_system {
                 };
                 emit!(world, (CreateGameEvent));
             }
+        }
+    }
+
+    #[generate_trait]
+    impl InternalImpl of InternalTrait {
+        fn store_map(self: @ContractState, game_id: u32, ref store: Store, map: @Array<Cell>, rows: u8, cols: u8) {
+            let mut x_index = 0;
+            loop {
+                if x_index == rows {
+                    break;
+                }
+                let mut y_index = 0;
+                loop {
+                    if y_index == cols {
+                        break;
+                    }
+                    let cell = *map.at((x_index * cols + y_index).into());
+                    store.set_tile(
+                        Tile {
+                            row_id: x_index.into(),
+                            col_id: y_index.into(),
+                            game_id: game_id,
+                            value: cell.into()
+                        }
+                    );
+                    y_index += 1;
+                };
+                x_index += 1;
+            };
         }
     }
 }
