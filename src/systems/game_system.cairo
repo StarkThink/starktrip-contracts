@@ -32,7 +32,7 @@ mod game_system {
 
             let game_id = world.uuid() + 1;
             let (map, rows, columns) = get_random_hardcoded_map(1);
-            self.store_map(game_id, ref store, @map, 7, 5);
+            self.store_map(game_id, ref store, @map, rows, columns);
 
             let max_movements = 10; //TODO
             let board = self.generate_board(game_id, @map, 7, 5, max_movements);

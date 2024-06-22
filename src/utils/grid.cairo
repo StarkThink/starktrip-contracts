@@ -18,7 +18,8 @@ enum Cell {
     LazyBear,
     LazyBearPlanet,
     Robot,
-    RobotPlanet
+    RobotPlanet,
+    Blank
 }
 
 impl CellDisplay of Display<Cell> {
@@ -39,6 +40,7 @@ impl CellDisplay of Display<Cell> {
             Cell::LazyBearPlanet => 13,
             Cell::Robot => 14,
             Cell::RobotPlanet => 15,
+            Cell::Blank => 16,
         };
         write!(f, "{s}")
     }
@@ -62,6 +64,7 @@ impl CellIntoFelt252 of Into<Cell, felt252> {
             Cell::LazyBearPlanet => 'lazybear_p',
             Cell::Robot => 'robot',
             Cell::RobotPlanet => 'robot_p',
+            Cell::Blank => 'blank',
         }
     }
 }
@@ -85,6 +88,7 @@ impl CellImpl of CellTrait {
             Cell::LazyBearPlanet => false,
             Cell::Robot => true,
             Cell::RobotPlanet => false,
+            Cell::Blank => false,
         }
     }
 
@@ -105,6 +109,7 @@ impl CellImpl of CellTrait {
             Cell::LazyBearPlanet => true,
             Cell::Robot => false,
             Cell::RobotPlanet => true,
+            Cell::Blank => false,
         }
     }
 
@@ -171,7 +176,11 @@ fn get_random_element(ref randomizer: Random, current_elements: Span<Cell>) -> C
             7 => Cell::Alien2Planet,
             8 => Cell::GhostPlanet,
             9 => Cell::DinoPlanet,
-            10 => Cell::Player,
+            10 => Cell::Robot,
+            11 => Cell::RobotPlanet,
+            12 => Cell::LazyBear,
+            13 => Cell::LazyBearPlanet,
+            14 => Cell::Blank,
             _ => Cell::Wall, // default case, should not happen
         };
 
