@@ -31,10 +31,12 @@ mod game_system {
             let mut store = StoreTrait::new(world);
 
             let game_id = world.uuid() + 1;
-            let (map, rows, columns) = get_random_hardcoded_map(1);
+            let (map, gas, size) = get_random_hardcoded_map(world, 1);
+            let rows = *size.at(0);
+            let columns = *size.at(1);
             self.store_map(game_id, ref store, @map, rows, columns);
 
-            let max_movements = 10; //TODO
+            let max_movements = gas;
             let board = self.generate_board(game_id, @map, 7, 5, max_movements);
 
             let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
@@ -128,18 +130,11 @@ mod game_system {
 
         fn create_round(world: IWorldDispatcher, game_id: u32) {
             let mut store: Store = StoreTrait::new(world);
-            let map = generate_map(world, 7, 5);
+            
             let mut game = store.get_game(game_id);
 
-            self.store_map(game_id, ref store, @map, 7, 5);
-
-            let max_movements = 10; //TODO
-            let board = self.generate_board(game_id, @map, 7, 5, max_movements);
-            store.set_board(board);
-
-            let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
-            store.set_spaceship(spaceship);
             game.round += 1;
+            
             if game.round <= 7 {
                 let gameEvent = GameEvent { id: game_id, score: game.score, round: game.round };
                 emit!(world, (gameEvent));
@@ -149,6 +144,20 @@ mod game_system {
                 };
                 emit!(world, (GameOverEvent));
             }
+
+            let (map, gas, size) = get_random_hardcoded_map(world, game.round);
+            let rows = *size.at(0);
+            let columns = *size.at(1);
+
+            self.store_map(game_id, ref store, @map, rows, columns);
+
+            let max_movements = gas;
+            let board = self.generate_board(game_id, @map, rows, columns, max_movements);
+            store.set_board(board);
+
+            let spaceship = self.generate_spaceship(game_id, @map, rows, columns, max_movements);
+            store.set_spaceship(spaceship);
+
         }
 
         fn end_game(world: IWorldDispatcher, game_id: u32) {

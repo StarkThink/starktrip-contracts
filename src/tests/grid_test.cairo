@@ -9,7 +9,9 @@ mod grid_test {
     #[available_gas(30000000000000000)]
     fn test_grid() {
         let (world, _) = setup::spawn_game();
-        let (map, rows, columns) = get_random_hardcoded_map(1);
+        let (map, _, size) = get_random_hardcoded_map(world, 1);
+        let rows = *size.at(0);
+        let columns = *size.at(1);
         printMap(map, rows, columns);
     }
 }
