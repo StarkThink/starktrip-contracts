@@ -196,7 +196,15 @@ fn get_map(round: u8, map_index: u8) -> (Array<Cell>, u8, Array<u8>) {
         d_round_1, d_round_2, d_round_3, d_round_4, d_round_5, d_round_6, d_round_7
     ];
 
-    let round_index = rounds[round];
-    let map_target = round_index[map_index];
-    (map_target[0], map_target[1], map_target[2])
+    let round_index = *rounds.at(round);
+    let map_target = *round_index.at(map_index);
+    (*map_target.at(0), *map_target.at(1), *map_target.at(2))
+}
+
+fn get_random_hardcoded_map(round: u8) -> (Array<Cell>, u8, u8) {
+    let mut random_index = RandomImpl::between::<u8>(0, 3);
+    let (map, gas_solution, matrix_size) = get_map(round, random_index);
+    let rows = *matrix_size.at(0);
+    let columns = *matrix_size.at(1);
+    (map, rows, columns)
 }

@@ -21,7 +21,8 @@ mod game_system {
     use starktrip::models::events::{GameOver, GameWin, CreateGame, GameEvent, Move};
     use starktrip::models::tile::Tile;
     use starktrip::store::{Store, StoreTrait};
-    use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252, CellTrait};
+    use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252, CellTrait,};
+    use starktrip::utils::maps::get_random_hardcoded_map;
     use starknet::{ContractAddress, get_caller_address, get_contract_address};
 
     #[abi(embed_v0)]
@@ -30,7 +31,7 @@ mod game_system {
             let mut store = StoreTrait::new(world);
 
             let game_id = world.uuid() + 1;
-            let map = generate_map(world, 7, 5);
+            let (map, rows, columns) = get_random_hardcoded_map(1);
             self.store_map(game_id, ref store, @map, 7, 5);
 
             let max_movements = 10; //TODO
@@ -58,9 +59,7 @@ mod game_system {
             store.set_spaceship(spaceship);
             store.set_leader_board(leader_board);
 
-            let CreateGameEvent = CreateGame {
-                game_id: game_id, player_address: owner
-            };
+            let CreateGameEvent = CreateGame { game_id: game_id, player_address: owner };
             emit!(world, (CreateGameEvent));
 
             game_id
@@ -81,21 +80,23 @@ mod game_system {
                 self.end_game_proc(world, game_id);
                 ()
             }
-            
+
             let cell = self.get_cell_at(ref store, game_id, pos_x.into(), pos_y.into());
-            if cell.is_character() && !self.character_inside(game_id, spaceship, ref store, cell){
-                store.set_characters_inside(
-                    CharactersInside {
-                        id: spaceship.len_characters_inside.into(),
-                        game_id: game_id,
-                        value: cell.into()
-                    }
-                );
+            if cell.is_character() && !self.character_inside(game_id, spaceship, ref store, cell) {
+                store
+                    .set_characters_inside(
+                        CharactersInside {
+                            id: spaceship.len_characters_inside.into(),
+                            game_id: game_id,
+                            value: cell.into()
+                        }
+                    );
                 spaceship.len_characters_inside += 1;
             }
 
             if cell.is_planet() {
-                let character_removed = self.remove_character_for_planet(game_id, spaceship, ref store, cell);
+                let character_removed = self
+                    .remove_character_for_planet(game_id, spaceship, ref store, cell);
                 if character_removed {
                     // since we removed a character, we need to update the spaceship
                     spaceship = store.get_spaceship(game_id);
@@ -106,7 +107,10 @@ mod game_system {
             if board.remaining_characters == 0 {
                 game.score += 10;
                 let GameWinEvent = GameWin {
-                    game_id: game_id, player_address: get_caller_address(), round: game.round, score: game.score
+                    game_id: game_id,
+                    player_address: get_caller_address(),
+                    round: game.round,
+                    score: game.score
                 };
                 emit!(world, (GameWinEvent));
                 store.set_game(game);
@@ -114,10 +118,7 @@ mod game_system {
             }
 
             let moveEvent = Move {
-                game_id: game_id,
-                pos_x: pos_x,
-                pos_y: pos_y,
-                remaining_gas: spaceship.remaining_gas
+                game_id: game_id, pos_x: pos_x, pos_y: pos_y, remaining_gas: spaceship.remaining_gas
             };
             emit!(world, (moveEvent));
             store.set_spaceship(spaceship);
@@ -140,14 +141,12 @@ mod game_system {
             store.set_spaceship(spaceship);
             game.round += 1;
             if game.round <= 7 {
-                let gameEvent = GameEvent {
-                    id: game_id,
-                    score: game.score,
-                    round: game.round 
-                };
-                emit!(world, (gameEvent)); 
+                let gameEvent = GameEvent { id: game_id, score: game.score, round: game.round };
+                emit!(world, (gameEvent));
             } else {
-                let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
+                let GameOverEvent = GameOver {
+                    game_id: game_id, player_address: get_caller_address()
+                };
                 emit!(world, (GameOverEvent));
             }
         }
@@ -159,7 +158,14 @@ mod game_system {
 
     #[generate_trait]
     impl InternalImpl of InternalTrait {
-        fn store_map(self: @ContractState, game_id: u32, ref store: Store, map: @Array<Cell>, rows: u8, cols: u8) {
+        fn store_map(
+            self: @ContractState,
+            game_id: u32,
+            ref store: Store,
+            map: @Array<Cell>,
+            rows: u8,
+            cols: u8
+        ) {
             let mut x_index = 0;
             loop {
                 if x_index == rows {
@@ -171,14 +177,15 @@ mod game_system {
                         break;
                     }
                     let cell = *map.at((x_index * cols + y_index).into());
-                    store.set_tile(
-                        Tile {
-                            row_id: x_index.into(),
-                            col_id: y_index.into(),
-                            game_id: game_id,
-                            value: cell.into()
-                        }
-                    );
+                    store
+                        .set_tile(
+                            Tile {
+                                row_id: x_index.into(),
+                                col_id: y_index.into(),
+                                game_id: game_id,
+                                value: cell.into()
+                            }
+                        );
                     y_index += 1;
                 };
                 x_index += 1;
@@ -215,13 +222,20 @@ mod game_system {
             result
         }
 
-        fn get_cell_at(self: @ContractState, ref store: Store, game_id: u32, row_id: u32, col_id: u32) -> Cell {
+        fn get_cell_at(
+            self: @ContractState, ref store: Store, game_id: u32, row_id: u32, col_id: u32
+        ) -> Cell {
             let tile = store.get_tile(row_id, col_id, game_id);
             self.felt252_to_cell(tile.value)
         }
 
         fn generate_board(
-            self: @ContractState, game_id: u32, map: @Array<Cell>, rows: u8, cols: u8, max_movements: u8
+            self: @ContractState,
+            game_id: u32,
+            map: @Array<Cell>,
+            rows: u8,
+            cols: u8,
+            max_movements: u8
         ) -> Board {
             let mut i = 0_u8;
             let mut characters_inside = 0;
@@ -245,7 +259,12 @@ mod game_system {
         }
 
         fn generate_spaceship(
-            self: @ContractState, game_id: u32, map: @Array<Cell>, rows: u8, cols: u8, remaining_gas: u8
+            self: @ContractState,
+            game_id: u32,
+            map: @Array<Cell>,
+            rows: u8,
+            cols: u8,
+            remaining_gas: u8
         ) -> Spaceship {
             let mut i = 0_u8;
             let mut x = 0;
@@ -272,10 +291,7 @@ mod game_system {
         }
 
         fn generate_leaderboard(self: @ContractState) -> LeaderBoard {
-            LeaderBoard {
-                id: 1,
-                len_players: 0
-            }
+            LeaderBoard { id: 1, len_players: 0 }
         }
 
         fn get_characters_inside(
@@ -295,7 +311,11 @@ mod game_system {
         }
 
         fn character_inside(
-            self: @ContractState, game_id: u32, spaceship: Spaceship, ref store: Store, character: Cell
+            self: @ContractState,
+            game_id: u32,
+            spaceship: Spaceship,
+            ref store: Store,
+            character: Cell
         ) -> bool {
             let characters = self.get_characters_inside(game_id, spaceship, ref store);
             let mut i = 0;
@@ -313,7 +333,11 @@ mod game_system {
         }
 
         fn remove_character_inside(
-            self: @ContractState, game_id: u32, mut spaceship: Spaceship, ref store: Store, character: Cell
+            self: @ContractState,
+            game_id: u32,
+            mut spaceship: Spaceship,
+            ref store: Store,
+            character: Cell
         ) {
             let mut i = 0;
             loop {
@@ -324,9 +348,10 @@ mod game_system {
                 if self.felt252_to_cell(character_found.value) == character {
                     if i < (spaceship.len_characters_inside - 1) {
                         // Move the last element to the current position
-                        let mut last_character = store.get_characters_inside(
-                            id: (spaceship.len_characters_inside - 1).into(), game_id: game_id
-                        );
+                        let mut last_character = store
+                            .get_characters_inside(
+                                id: (spaceship.len_characters_inside - 1).into(), game_id: game_id
+                            );
                         last_character.id = i.into();
                         store.set_characters_inside(last_character);
                     }
@@ -339,7 +364,11 @@ mod game_system {
         }
 
         fn remove_character_for_planet(
-            self: @ContractState, game_id: u32, mut spaceship: Spaceship, ref store: Store, planet: Cell
+            self: @ContractState,
+            game_id: u32,
+            mut spaceship: Spaceship,
+            ref store: Store,
+            planet: Cell
         ) -> bool {
             let characters = self.get_characters_inside(game_id, spaceship, ref store);
             let mut i = 0;
@@ -361,23 +390,20 @@ mod game_system {
             let mut store: Store = StoreTrait::new(world);
             let mut game: Game = store.get_game(game_id);
             let mut leader_board: LeaderBoard = store.get_leader_board(1);
-            
+
             game.active = false;
-            
+
             let new_player: LeaderBoardPlayers = LeaderBoardPlayersTrait::new(
-                leader_board.len_players, 
-                game.player_name,
-                game.score
+                leader_board.len_players, game.player_name, game.score
             );
             leader_board.len_players += 1;
-            
+
             store.set_leader_board_players(new_player);
             store.set_leader_board(leader_board);
             store.set_game(game);
-        
+
             let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
             emit!(world, (GameOverEvent));
         }
-
     }
 }

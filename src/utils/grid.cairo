@@ -15,6 +15,10 @@ enum Cell {
     GhostPlanet,
     DinoPlanet,
     Player,
+    LazyBear,
+    LazyBearPlanet,
+    Robot,
+    RobotPlanet
 }
 
 impl CellDisplay of Display<Cell> {
@@ -31,6 +35,10 @@ impl CellDisplay of Display<Cell> {
             Cell::GhostPlanet => 9,
             Cell::DinoPlanet => 10,
             Cell::Player => 11,
+            Cell::LazyBear => 12,
+            Cell::LazyBearPlanet => 13,
+            Cell::Robot => 14,
+            Cell::RobotPlanet => 15,
         };
         write!(f, "{s}")
     }
@@ -50,6 +58,10 @@ impl CellIntoFelt252 of Into<Cell, felt252> {
             Cell::GhostPlanet => 'ghost_p',
             Cell::DinoPlanet => 'dino_p',
             Cell::Player => 'player',
+            Cell::LazyBear => 'lazybear',
+            Cell::LazyBearPlanet => 'lazybear_p',
+            Cell::Robot => 'robot',
+            Cell::RobotPlanet => 'robot_p',
         }
     }
 }
@@ -69,6 +81,10 @@ impl CellImpl of CellTrait {
             Cell::GhostPlanet => false,
             Cell::DinoPlanet => false,
             Cell::Player => false,
+            Cell::LazyBear => true,
+            Cell::LazyBearPlanet => false,
+            Cell::Robot => true,
+            Cell::RobotPlanet => false,
         }
     }
 
@@ -85,6 +101,10 @@ impl CellImpl of CellTrait {
             Cell::GhostPlanet => true,
             Cell::DinoPlanet => true,
             Cell::Player => false,
+            Cell::LazyBear => false,
+            Cell::LazyBearPlanet => true,
+            Cell::Robot => false,
+            Cell::RobotPlanet => true,
         }
     }
 
@@ -94,6 +114,8 @@ impl CellImpl of CellTrait {
             Cell::Alien2 => Cell::Alien2Planet,
             Cell::Ghost => Cell::GhostPlanet,
             Cell::Dino => Cell::DinoPlanet,
+            Cell::Robot => Cell::RobotPlanet,
+            Cell::LazyBear => Cell::LazyBearPlanet,
             _ => Cell::Empty, // should not happen
         }
     }
@@ -117,7 +139,7 @@ fn should_paint_wall(row: u8, col: u8, ref randomizer: Random) -> bool {
 fn element_pending(current_elements: Span<Cell>, random_element: Cell) -> bool {
     let mut i = 0;
     let result = loop {
-        if  i == current_elements.len() {
+        if i == current_elements.len() {
             break true;
         }
         if *current_elements.at(i) == random_element {
@@ -185,7 +207,7 @@ fn get_index_from_matrix_index(matrix_index: u8, len_cols: u8) -> (u8, u8) {
     (row.into(), col.into())
 }
 
-fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row: u8 ) -> Array<u32> {
+fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row: u8) -> Array<u32> {
     let mut result = ArrayTrait::<u32>::new();
 
     let mut row_below = ArrayTrait::<Cell>::new();
@@ -209,15 +231,14 @@ fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row:
                 trapped_start_index = i;
             }
             empty_found = true;
-            if (row_below.len() > 0 && *row_below.at(i.into()) == Cell::Empty) 
-            || (row_above.len() > 0 && *row_above.at(i.into()) == Cell::Empty) 
-            {
+            if (row_below.len() > 0 && *row_below.at(i.into()) == Cell::Empty)
+                || (row_above.len() > 0 && *row_above.at(i.into()) == Cell::Empty) {
                 trapped_empty = false;
             } else {
                 trapped_empty = true;
             }
         }
-        if ((i+1) == len_cols) || *current_row.at(i.into()) == Cell::Wall {
+        if ((i + 1) == len_cols) || *current_row.at(i.into()) == Cell::Wall {
             index_to_update = i;
             if trapped_empty && empty_found {
                 // We should only modify walls if one of index x, or y is not even.
@@ -227,13 +248,19 @@ fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row:
                     }
                 }
                 if row_below.len() > 0 {
-                    result.append(get_matrix_index(len_cols: len_cols, row: row + 1, col: index_to_update));
+                    result
+                        .append(
+                            get_matrix_index(len_cols: len_cols, row: row + 1, col: index_to_update)
+                        );
                 } else if row_above.len() > 0 {
-                    result.append(get_matrix_index(len_cols: len_cols, row: row - 1, col: index_to_update));
+                    result
+                        .append(
+                            get_matrix_index(len_cols: len_cols, row: row - 1, col: index_to_update)
+                        );
                 }
             }
             empty_found = false;
-            if ((i+1) == len_cols) {
+            if ((i + 1) == len_cols) {
                 break;
             }
         }
@@ -245,7 +272,7 @@ fn check_row_for_trapped_empty(map: Span<Cell>, len_cols: u8, len_rows: u8, row:
 fn paint_wall(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
     let mut map: Array<Cell> = ArrayTrait::new();
     let mut randomizer = RandomImpl::new(world);
-    
+
     let mut x_index = 0;
     loop {
         if x_index == rows {
@@ -276,7 +303,7 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
     let mut index_to_update = array![];
     let mut map = paint_wall(world, rows, cols);
     let mut map_span = map.span();
-    loop{
+    loop {
         if x_index == rows {
             break;
         }
@@ -293,7 +320,7 @@ fn generate_map(world: IWorldDispatcher, rows: u8, cols: u8) -> Array<Cell> {
 
     let mut result: Array<Cell> = ArrayTrait::new();
     let mut map_index = 0;
-    loop{
+    loop {
         if map_index == map.len() {
             break;
         }
