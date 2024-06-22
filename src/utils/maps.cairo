@@ -1,202 +1,300 @@
 use starktrip::utils::grid::Cell;
 use starktrip::utils::random::RandomImpl;
+use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
 
 fn get_map(round: u8, map_index: u8) -> (Array<Cell>, u8, Array<u8>) {
-    let map_1 = array![
+    let map_1 = (
         array![Cell::Empty, Cell::Blank, Cell::Dino, Cell::Blank, Cell::Empty,
             Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
             Cell::DinoPlanet, Cell::Blank, Cell::Blank, Cell::Wall, Cell::GhostPlanet,
             Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
-            Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty], 7, array![5, 5]
-    ]; // 7
+            Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty], 7_u8, array![5_u8, 5_u8]
+    ); // 7
 
 
-    let map_2 = array![
+    let map_2 = (
         array![Cell::Alien, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
             Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
             Cell::AlienPlanet, Cell::Wall, Cell::Blank, Cell::Wall, Cell::LazyBearPlanet,
             Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-            Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty], 7, array![5, 5]
-    ]; // 7
+            Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty], 7_u8, array![5_u8, 5_u8]
+    ); // 7
 
-    let map_3 = array![
+    let map_3 = (
         array![Cell::Robot, Cell::Blank, Cell::Alien2Planet, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Alien2, Cell::Blank, Cell::Blank, Cell::Wall, Cell::Empty,
         Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::RobotPlanet, Cell::Blank, Cell::Empty], 5, array![5, 5]
-    ]; // 5
+        Cell::Empty, Cell::Blank, Cell::RobotPlanet, Cell::Blank, Cell::Empty], 5_u8, array![5_u8, 5_u8]
+    ); // 5
 
-    let map_4 = array![
+    let map_4 = (
         array![Cell::GhostPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::RobotPlanet, Cell::Wall, Cell::Blank, Cell::Blank, Cell::Robot, Cell::Blank, Cell::Empty,
         Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty], 9, array![5, 9]
-    ]; // 9
+        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty], 9_u8, array![5_u8, 9_u8]
+    ); // 9
 
-    let map_5 = array![
+    let map_5 = (
         array![Cell::Alien, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::LazyBearPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 11, array![5, 9]
-    ]; // 11
+        Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 11_u8, array![5_u8, 9_u8]
+    ); // 11
 
-    let map_6 = array![
+    let map_6 = (
         array![Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien2, Cell::Blank, Cell::GhostPlanet, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall,
         Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Alien2Planet,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 6, array![5, 9]
-    ]; // 6
+        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 6_u8, array![5_u8, 9_u8]
+    ); // 6
 
-    let map_7 = array![
+    let map_7 = (
         array![Cell::Empty, Cell::Wall, Cell::Dino, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall,
         Cell::Robot, Cell::Blank, Cell::RobotPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::DinoPlanet, Cell::Blank, Cell::GhostPlanet], 12, array![7, 11]
-    ]; // 12
+        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::DinoPlanet, Cell::Blank, Cell::GhostPlanet], 12_u8, array![7_u8, 11_u8]
+    ); // 12
 
-    let map_8 = array![
+    let map_8 = (
         array![Cell::Dino, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::DinoPlanet, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall,
         Cell::Robot, Cell::Wall, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien2, Cell::Blank, Cell::Alien2Planet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
         Cell::RobotPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 15, array![7, 11]
-    ]; // 15
+        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 15_u8, array![7_u8, 11_u8]
+    ); // 15
 
-    let map_9 = array![
+    let map_9 = (
         array![Cell::Empty, Cell::Wall, Cell::DinoPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien2, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBearPlanet, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Alien2Planet, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Dino, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 12, array![7, 11]
-    ]; // 12
+        Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Dino, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 12_u8, array![7_u8, 11_u8]
+    ); // 12
 
-    let map_10 = array![
+    let map_10 = (
         array![Cell::Alien, Cell::Blank, Cell::GhostPlanet, Cell::Blank, Cell::Ghost, Cell::Wall, Cell::RobotPlanet,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Alien2Planet, Cell::Wall, Cell::Alien2, Cell::Blank, Cell::Blank, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Robot], 12, array![5, 7]
-    ]; // 12
+        Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Robot], 12_u8, array![5_u8, 7_u8]
+    ); // 12
 
-    let map_11 = array![
+    let map_11 = (
         array![Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::GhostPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall,
         Cell::AlienPlanet, Cell::Blank, Cell::Alien, Cell::Wall, Cell::Blank, Cell::Blank, Cell::DinoPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Dino, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty], 11, array![5, 7]
-    ]; // 11
+        Cell::Dino, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty], 11_u8, array![5_u8, 7_u8]
+); // 11
 
-    let map_12 = array![
+    let map_12 = (
         array![Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Ghost, Cell::Blank, Cell::RobotPlanet,
         Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Alien, Cell::Blank, Cell::GhostPlanet, Cell::Wall, Cell::Blank, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::LazyBearPlanet, Cell::Blank, Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Robot], 10, array![5, 7]
-    ]; // 10
+        Cell::LazyBearPlanet, Cell::Blank, Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Robot], 10_u8, array![5_u8, 7_u8]
+    ); // 10
 
-    let map_13 = array![
+    let map_13 = (
         array![Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::AlienPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Dino, Cell::Wall, Cell::Alien2, Cell::Blank, Cell::Alien, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Wall, Cell::DinoPlanet, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Empty, Cell::Wall, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::Alien2Planet, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 15, array![7, 11]
-    ]; // 15
+        Cell::Empty, Cell::Blank, Cell::Alien2Planet, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty], 15_u8, array![7_u8, 11_u8]
+    ); // 15
 
-    let map_14 = array![
+    let map_14 = (
         array![Cell::GhostPlanet, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::RobotPlanet, Cell::Wall, Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Robot, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall,
         Cell::Empty, Cell::Wall, Cell::DinoPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Blank, Cell::Dino, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Wall, Cell::Empty], 15, array![7, 11]
-    ]; // 15
+        Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Ghost, Cell::Wall, Cell::Empty], 15_u8, array![7_u8, 11_u8]
+    ); // 15
 
-    let map_15 = array![
+    let map_15 = (
         array![Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Wall, Cell::RobotPlanet, Cell::Blank, Cell::Alien2Planet, Cell::Blank, Cell::LazyBear,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::AlienPlanet, Cell::Wall, Cell::Alien2, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Blank, Cell::Blank, Cell::Empty, Cell::Wall, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
-        Cell::Robot, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien, Cell::Blank, Cell::Empty], 21, array![7, 11]
-    ]; // 21
+        Cell::Robot, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien, Cell::Blank, Cell::Empty], 21_u8, array![7_u8, 11_u8]
+    ); // 21
 
-    let map_16 = array![
+    let map_16 = (
         array![Cell::AlienPlanet, Cell::Blank, Cell::GhostPlanet, Cell::Wall, Cell::RobotPlanet, Cell::Blank, Cell::LazyBearPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Alien2Planet, Cell::Blank, Cell::LazyBear, Cell::Wall, Cell::Blank, Cell::Blank, Cell::Robot,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Alien2, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien, Cell::Blank, Cell::Ghost], 16, array![5, 7]
-    ]; // 16
+        Cell::Alien2, Cell::Blank, Cell::Empty, Cell::Blank, Cell::Alien, Cell::Blank, Cell::Ghost], 16_u8, array![5_u8, 7_u8]
+); // 16
 
-    let map_17 = array![
+    let map_17 = (
         array![Cell::Alien, Cell::Blank, Cell::GhostPlanet, Cell::Wall, Cell::AlienPlanet, Cell::Blank, Cell::RobotPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Ghost, Cell::Blank, Cell::Alien2, Cell::Blank, Cell::Blank, Cell::Wall, Cell::Alien2Planet,
         Cell::Blank, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Robot, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 13, array![5, 7]
-    ]; // 13
+        Cell::Robot, Cell::Blank, Cell::LazyBearPlanet, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 13_u8, array![5_u8, 7_u8]
+    ); // 13
 
-    let map_18 = array![
+    let map_18 = (
         array![Cell::Robot, Cell::Blank, Cell::GhostPlanet, Cell::Blank, Cell::Alien, Cell::Wall, Cell::RobotPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::AlienPlanet, Cell::Wall, Cell::Ghost, Cell::Blank, Cell::Blank, Cell::Blank, Cell::Empty,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::LazyBear, Cell::Blank, Cell::Alien2, Cell::Wall, Cell::Alien2Planet, Cell::Blank, Cell::LazyBearPlanet], 14, array![5, 7]
-    ]; // 14
+        Cell::LazyBear, Cell::Blank, Cell::Alien2, Cell::Wall, Cell::Alien2Planet, Cell::Blank, Cell::LazyBearPlanet], 14_u8, array![5_u8, 7_u8]
+    ); // 14
 
-    let map_19 = array![
+    let map_19 = (
         array![Cell::Empty, Cell::Blank, Cell::DinoPlanet, Cell::Blank, Cell::RobotPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Dino, Cell::Wall, Cell::Blank, Cell::Blank, Cell::Robot,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::LazyBearPlanet, Cell::Blank, Cell::LazyBear, Cell::Wall, Cell::Empty], 8, array![5, 5]
-    ]; // 8
+        Cell::LazyBearPlanet, Cell::Blank, Cell::LazyBear, Cell::Wall, Cell::Empty], 8_u8, array![5_u8, 5_u8]
+    ); // 8
 
-    let map_20 = array![
+    let map_20 = (
         array![Cell::Empty, Cell::Blank, Cell::GhostPlanet, Cell::Blank, Cell::AlienPlanet,
         Cell::Wall, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Ghost, Cell::Blank, Cell::Blank, Cell::Wall, Cell::LazyBearPlanet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
-        Cell::Alien, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 7, array![5, 5]
-    ]; // 7
+        Cell::Alien, Cell::Blank, Cell::Empty, Cell::Blank, Cell::LazyBear], 7_u8, array![5_u8, 5_u8]
+); // 7
 
-    let map_21 = array![
+    let map_21 = (
         array![Cell::Ghost, Cell::Blank, Cell::GhostPlanet, Cell::Blank, Cell::Alien2Planet,
         Cell::Blank, Cell::Wall, Cell::Blank, Cell::Wall, Cell::Blank,
         Cell::Empty, Cell::Blank, Cell::Blank, Cell::Blank, Cell::LazyBearPlanet,
         Cell::Wall, Cell::Wall, Cell::Wall, Cell::Wall, Cell::Blank,
-        Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Alien2], 8, array![5, 5]
-    ]; // 8
+        Cell::Empty, Cell::Blank, Cell::LazyBear, Cell::Blank, Cell::Alien2], 8_u8, array![5_u8, 5_u8]
+    ); // 8
 
-    // // Definición de los diccionarios para cada ronda
-    let d_round_1 = array![map_1, map_2, map_3];
-    let d_round_2 = array![map_19, map_20, map_21];
-    let d_round_3 = array![map_10, map_11, map_12];
-    let d_round_4 = array![map_16, map_17, map_18];
-    let d_round_5 = array![map_4, map_5, map_6];
-    let d_round_6 = array![map_7, map_8, map_9];
-    let d_round_7 = array![map_13, map_14, map_15];
 
-    let rounds = array![
-        d_round_1, d_round_2, d_round_3, d_round_4, d_round_5, d_round_6, d_round_7
-    ];
+    if round == 1 {
+        if map_index == 1 {
+            map_1
+        }
 
-    let round_index = rounds[round];
-    let map_target = round_index[map_index];
-    (map_target[0], map_target[1], map_target[2])
+        else if map_index == 2 {
+            map_2
+        }
+
+        else {
+            map_3
+        }
+        
+    }
+
+    else if round == 2 {
+        if map_index == 1 {
+            map_4
+        }
+
+        else if map_index == 2 {
+            map_5
+        }
+
+        else {
+            map_6
+        }
+        
+    }
+
+    else if round == 3 {
+        if map_index == 1 {
+            map_7
+        }
+
+        else if map_index == 2 {
+            map_8
+        }
+
+        else {
+            map_9
+        }
+        
+    }
+
+    else if round == 4 {
+        if map_index == 1 {
+            map_10
+        }
+
+        else if map_index == 2 {
+            map_11
+        }
+
+        else {
+            map_12
+        }
+        
+    }
+
+    else if round == 5 {
+        if map_index == 1 {
+            map_13
+        }
+
+        else if map_index == 2 {
+            map_14
+        }
+
+        else {
+            map_15
+        }
+        
+    }
+
+    else if round == 6 {
+        if map_index == 1 {
+            map_16
+        }
+
+        else if map_index == 2 {
+            map_17
+        }
+
+        else {
+            map_18
+        }
+        
+    }
+
+    else {
+        if map_index == 1 {
+            map_19
+        }
+
+        else if map_index == 2 {
+            map_20
+        }
+
+        else {
+            map_21
+        }
+        
+    }
+}
+
+fn get_random_hardcoded_map(world: IWorldDispatcher, round: u8) -> (Array<Cell>, u8, Array<u8>) {
+    let mut randomizer = RandomImpl::new(world);
+    let mut random_index = randomizer.between::<u8>(0, 2);
+
+    let (map, gas_solution, matrix_size) = get_map(round, random_index);
+    (map, gas_solution, matrix_size)
 }

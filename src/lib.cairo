@@ -3,6 +3,7 @@ mod store;
 mod utils {
     mod grid;
     mod random;
+    mod maps;
 }
 
 mod systems {
