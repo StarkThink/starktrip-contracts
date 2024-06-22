@@ -37,9 +37,9 @@ mod game_system {
             self.store_map(game_id, ref store, @map, rows, columns);
 
             let max_movements = gas;
-            let board = self.generate_board(game_id, @map, 7, 5, max_movements);
+            let board = self.generate_board(game_id, @map, rows, columns, max_movements);
 
-            let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
+            let spaceship = self.generate_spaceship(game_id, @map, rows, columns, max_movements);
             let mut leader_board = store.get_leader_board(game_id);
             if leader_board.len_players == 0 {
                 leader_board = self.generate_leaderboard();
@@ -73,17 +73,17 @@ mod game_system {
             let mut game: Game = store.get_game(game_id);
             let mut spaceship = store.get_spaceship(game_id);
             let mut board = store.get_board(game_id);
+            let cell = self.get_cell_at(ref store, game_id, pos_x.into(), pos_y.into());
 
             assert(game.active, 'Game is not active');
 
-            if spaceship.remaining_gas > 0 {
+            if spaceship.remaining_gas > 0 && cell != Cell::Blank {
                 spaceship.remaining_gas -= 1;
             } else {
                 self.end_game_proc(world, game_id);
                 ()
             }
 
-            let cell = self.get_cell_at(ref store, game_id, pos_x.into(), pos_y.into());
             if cell.is_character() && !self.character_inside(game_id, spaceship, ref store, cell) {
                 store
                     .set_characters_inside(
