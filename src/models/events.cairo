@@ -16,7 +16,7 @@ struct GameWin {
     #[key]
     player_address: ContractAddress,
     round: u8,
-    score: u8
+    score: u32
 }
 
 #[derive(Model, Copy, Drop, Serde)]
@@ -33,10 +33,7 @@ struct GameEvent {
     #[key]
     id: u32,
     score: u32,
-    round: u32,
-    player_name: felt252,
-    owner: ContractAddress,
-    state: bool
+    round: u8
 }
 
 #[derive(Model, Copy, Drop, Serde)]

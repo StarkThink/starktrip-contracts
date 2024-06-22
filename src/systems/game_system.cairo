@@ -1,9 +1,12 @@
 use dojo::world::{IWorld, IWorldDispatcher, IWorldDispatcherTrait};
+use starknet::ContractAddress;
 
 #[dojo::interface]
 trait IGameSystem {
     fn create_game(player_name: felt252) -> u32;
     fn move(game_id: u32, pos_x: u8, pos_y: u8);
+    fn create_round(game_id: u32);
+    fn end_game(game_id: u32);
 }
 
 #[dojo::contract]
@@ -12,13 +15,14 @@ mod game_system {
     use starktrip::models::game::{Game, GameTrait};
     use starktrip::models::board::{Board, BoardTrait};
     use starktrip::models::spaceship::{Spaceship, SpaceshipTrait};
+    use starktrip::models::leader_board::{LeaderBoard, LeaderBoardTrait};
+    use starktrip::models::leader_board_players::{LeaderBoardPlayers, LeaderBoardPlayersTrait};
     use starktrip::models::characters_inside::{CharactersInside, CharactersInsideTrait};
-    use starktrip::models::events::{GameOver, GameWin, CreateGame, Move};
+    use starktrip::models::events::{GameOver, GameWin, CreateGame, GameEvent, Move};
     use starktrip::models::tile::Tile;
     use starktrip::store::{Store, StoreTrait};
     use starktrip::utils::grid::{generate_map, Cell, CellIntoFelt252, CellTrait};
-    use starknet::{get_caller_address, get_contract_address};
-    
+    use starknet::{ContractAddress, get_caller_address, get_contract_address};
 
     #[abi(embed_v0)]
     impl GameImpl of IGameSystem<ContractState> {
@@ -33,6 +37,10 @@ mod game_system {
             let board = self.generate_board(game_id, @map, 7, 5, max_movements);
 
             let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
+            let mut leader_board = store.get_leader_board(game_id);
+            if leader_board.len_players == 0 {
+                leader_board = self.generate_leaderboard();
+            }
 
             let owner = get_caller_address();
 
@@ -41,12 +49,14 @@ mod game_system {
                 owner: owner,
                 player_name: player_name,
                 score: 0,
-                round: 1
+                round: 1,
+                active: true
             );
 
             store.set_game(game);
             store.set_board(board);
             store.set_spaceship(spaceship);
+            store.set_leader_board(leader_board);
 
             let CreateGameEvent = CreateGame {
                 game_id: game_id, player_address: owner
@@ -63,13 +73,15 @@ mod game_system {
             let mut spaceship = store.get_spaceship(game_id);
             let mut board = store.get_board(game_id);
 
+            assert(game.active, 'Game is not active');
+
             if spaceship.remaining_gas > 0 {
                 spaceship.remaining_gas -= 1;
             } else {
-                let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
-                emit!(world, (GameOverEvent));
+                self.end_game_proc(world, game_id);
+                ()
             }
-
+            
             let cell = self.get_cell_at(ref store, game_id, pos_x.into(), pos_y.into());
             if cell.is_character() && !self.character_inside(game_id, spaceship, ref store, cell){
                 store.set_characters_inside(
@@ -92,12 +104,13 @@ mod game_system {
             }
 
             if board.remaining_characters == 0 {
+                game.score += 10;
                 let GameWinEvent = GameWin {
                     game_id: game_id, player_address: get_caller_address(), round: game.round, score: game.score
                 };
                 emit!(world, (GameWinEvent));
-                game.score += 10;
                 store.set_game(game);
+                ()
             }
 
             let moveEvent = Move {
@@ -109,6 +122,38 @@ mod game_system {
             emit!(world, (moveEvent));
             store.set_spaceship(spaceship);
             store.set_board(board);
+            ()
+        }
+
+        fn create_round(world: IWorldDispatcher, game_id: u32) {
+            let mut store: Store = StoreTrait::new(world);
+            let map = generate_map(world, 7, 5);
+            let mut game = store.get_game(game_id);
+
+            self.store_map(game_id, ref store, @map, 7, 5);
+
+            let max_movements = 10; //TODO
+            let board = self.generate_board(game_id, @map, 7, 5, max_movements);
+            store.set_board(board);
+
+            let spaceship = self.generate_spaceship(game_id, @map, 7, 5, max_movements);
+            store.set_spaceship(spaceship);
+            game.round += 1;
+            if game.round <= 7 {
+                let gameEvent = GameEvent {
+                    id: game_id,
+                    score: game.score,
+                    round: game.round 
+                };
+                emit!(world, (gameEvent)); 
+            } else {
+                let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
+                emit!(world, (GameOverEvent));
+            }
+        }
+
+        fn end_game(world: IWorldDispatcher, game_id: u32) {
+            self.end_game_proc(world, game_id);
         }
     }
 
@@ -226,6 +271,13 @@ mod game_system {
             }
         }
 
+        fn generate_leaderboard(self: @ContractState) -> LeaderBoard {
+            LeaderBoard {
+                id: 1,
+                len_players: 0
+            }
+        }
+
         fn get_characters_inside(
             self: @ContractState, game_id: u32, spaceship: Spaceship, ref store: Store
         ) -> Array<Cell> {
@@ -304,5 +356,28 @@ mod game_system {
             };
             result
         }
+
+        fn end_game_proc(self: @ContractState, world: IWorldDispatcher, game_id: u32) {
+            let mut store: Store = StoreTrait::new(world);
+            let mut game: Game = store.get_game(game_id);
+            let mut leader_board: LeaderBoard = store.get_leader_board(1);
+            
+            game.active = false;
+            
+            let new_player: LeaderBoardPlayers = LeaderBoardPlayersTrait::new(
+                leader_board.len_players, 
+                game.player_name,
+                game.score
+            );
+            leader_board.len_players += 1;
+            
+            store.set_leader_board_players(new_player);
+            store.set_leader_board(leader_board);
+            store.set_game(game);
+        
+            let GameOverEvent = GameOver { game_id: game_id, player_address: get_caller_address() };
+            emit!(world, (GameOverEvent));
+        }
+
     }
 }
