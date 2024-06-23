@@ -33,8 +33,7 @@ output=$(sozo -P ${profile} build && sozo -P ${profile} migrate apply)
 echo "$output"
 
 export world_address=$(cat ./manifests/$profile/manifest.json | jq -r '.world.address')
-export config_system_address=$(cat ./manifests/$profile/manifest.json | jq -r '.contracts[] | select(.name == "starktrip::systems::config_system::config_system" ).address')
-sozo -P ${profile} execute "${config_system_address}" init --world "$world_address"
+
 
 ./scripts/default_auth.sh ${profile}
 
