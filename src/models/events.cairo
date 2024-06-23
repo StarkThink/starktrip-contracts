@@ -43,5 +43,7 @@ struct Move {
     game_id: u32,
     pos_x: u8,
     pos_y: u8,
-    remaining_gas: u8
+    remaining_gas: u8,
+    max_movements: u8,
+    len_characters_inside: u8
 }

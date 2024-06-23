@@ -77,11 +77,13 @@ mod game_system {
 
             assert(game.active, 'Game is not active');
 
-            if spaceship.remaining_gas > 0 && cell != Cell::Blank {
-                spaceship.remaining_gas -= 1;
-            } else {
+            if spaceship.remaining_gas == 0 {
                 self.end_game_proc(world, game_id);
                 ()
+            }
+
+            if cell != Cell::Blank {
+                spaceship.remaining_gas -= 1;
             }
 
             if cell.is_character() && !self.character_inside(game_id, spaceship, ref store, cell) {
@@ -120,7 +122,12 @@ mod game_system {
             }
 
             let moveEvent = Move {
-                game_id: game_id, pos_x: pos_x, pos_y: pos_y, remaining_gas: spaceship.remaining_gas
+                game_id: game_id,
+                pos_x: pos_x,
+                pos_y: pos_y,
+                remaining_gas: spaceship.remaining_gas,
+                max_movements: board.max_movements,
+                len_characters_inside: spaceship.len_characters_inside
             };
             emit!(world, (moveEvent));
             store.set_spaceship(spaceship);
@@ -225,6 +232,16 @@ mod game_system {
                 result = Cell::DinoPlanet;
             } else if value == 'player' {
                 result = Cell::Player;
+            } else if value == 'lazybear' {
+                result = Cell::LazyBear;
+            } else if value == 'lazybear_p' {
+                result = Cell::LazyBearPlanet;
+            } else if value == 'robot' {
+                result = Cell::Robot;
+            } else if value == 'robot_p' {
+                result = Cell::RobotPlanet;
+            } else if value == 'blank' {
+                result = Cell::Blank;
             } else {
                 result = Cell::Wall;
             }

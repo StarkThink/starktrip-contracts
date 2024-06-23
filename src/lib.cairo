@@ -25,5 +25,6 @@ mod models {
 mod tests {
     mod setup;
     mod utils;
+    mod test_game_system;
     mod grid_test;
 }
