@@ -40,7 +40,7 @@ mod game_system {
             let board = self.generate_board(game_id, @map, rows, columns, max_movements);
 
             let spaceship = self.generate_spaceship(game_id, @map, rows, columns, max_movements);
-            let mut leader_board = store.get_leader_board(game_id);
+            let mut leader_board = store.get_leader_board(1);
             if leader_board.len_players == 0 {
                 leader_board = self.generate_leaderboard();
             }
@@ -164,6 +164,7 @@ mod game_system {
 
             let spaceship = self.generate_spaceship(game_id, @map, rows, columns, max_movements);
             store.set_spaceship(spaceship);
+            store.set_game(game);
 
         }
 

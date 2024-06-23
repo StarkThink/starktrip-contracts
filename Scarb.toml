@@ -26,6 +26,16 @@ account_address = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e582
 private_key = "0x2bbf4f9fd0bbb2e60b0316c1fe0b76cf7a4d0198bd493ced9b8df2a3a24d68a"
 world_address = "0x52b9b47c80cf6dcef243d16625bb0438999e5a7856773f2249873806f9ae6c5"  # Update this line with your world address
 
+[profile.testing.tool.dojo.env]
+rpc_url = "https://api.cartridge.gg/x/starktrip-testing/katana"
+account_address = "0x795abc2a2d5866f75c58025741329973db20966d1add5dd2a9fbdf0bb8a0266"
+private_key = "0x2e8ac99614186737cefc47effe03134f5a19c6dc2443c16510d3384769f9c78"
+
+[profile.prod.tool.dojo.env]
+rpc_url = "https://api.cartridge.gg/x/starktrip-prod/katana"
+account_address = "0x795abc2a2d5866f75c58025741329973db20966d1add5dd2a9fbdf0bb8a0266"
+private_key = "0x2e8ac99614186737cefc47effe03134f5a19c6dc2443c16510d3384769f9c78"
+
 [tool.dojo.world]
 name = "Dojo starter"
 description = "The official Dojo Starter guide, the quickest and most streamlined way to get your Dojo Autonomous World up and running. This guide will assist you with the initial setup, from cloning the repository to deploying your world."
